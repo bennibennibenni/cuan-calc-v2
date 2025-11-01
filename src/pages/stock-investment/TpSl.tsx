@@ -12,9 +12,12 @@ export const TpSl = () => {
     value4: yup.string().required('Oh noes! field must be fill!'),
     value5: yup.string().required('Oh noes! field must be fill!'),
     value6: yup.string().required('Oh noes! field must be fill!'),
+    value7: yup.string().required('Oh noes! field must be fill!'),
+    value8: yup.string().required('Oh noes! field must be fill!'),
     result1: yup.string(),
     result2: yup.string(),
     result3: yup.string(),
+    result4: yup.string(),
   })
 
   const {
@@ -51,6 +54,13 @@ export const TpSl = () => {
     })
   }
 
+  const onReset4 = () => {
+    reset({
+      value7: '',
+      value8: '',
+    })
+  }
+
   const onSubmit1 = async () => {
     const isValid = await trigger(['value1', 'value2'])
     if (isValid) {
@@ -71,7 +81,8 @@ export const TpSl = () => {
       const value3Number = parseFloat(value3)
       const value4Number = parseFloat(value4)
       const tempResult1 = value3Number / 100
-      const finalResult = tempResult1 * value4Number
+      const tempResult2 = tempResult1 * value4Number
+      const finalResult = value4Number - tempResult2
       setValue('result2', 'Rp' + ' ' + finalResult)
     }
   }
@@ -82,9 +93,21 @@ export const TpSl = () => {
       const { value5, value6 } = getValues()
       const value5Number = parseFloat(value5)
       const value6Number = parseFloat(value6)
-      const tempResult1 = value5Number * 100
-      const finalResult = tempResult1 / value6Number
-      setValue('result3', finalResult + ' ' + '%')
+      const tempResult1 = value5Number / 100
+      const finalResult = tempResult1 * value6Number
+      setValue('result3', 'Rp' + ' ' + finalResult)
+    }
+  }
+
+  const onSubmit4 = async () => {
+    const isValid = await trigger(['value7', 'value8'])
+    if (isValid) {
+      const { value7, value8 } = getValues()
+      const value7Number = parseFloat(value7)
+      const value8Number = parseFloat(value8)
+      const tempResult1 = value7Number * 100
+      const finalResult = tempResult1 / value8Number
+      setValue('result4', finalResult + ' ' + '%')
     }
   }
 
@@ -140,7 +163,7 @@ export const TpSl = () => {
       {/* SECTION 2 */}
       <div className='relative mt-8'>
         <Input
-          label='What is'
+          label='Decrease'
           postfix='%'
           errorMessage={errors?.value3?.message}
           {...register('value3')}
@@ -184,13 +207,14 @@ export const TpSl = () => {
       {/* SECTION 3 */}
       <div className='relative mt-8'>
         <Input
-          prefix='Rp'
+          label='What is'
+          postfix='%'
           errorMessage={errors?.value5?.message}
           {...register('value5')}
           onChange={() => clearErrors('value5')}
         />
         <Input
-          label='is what percent of'
+          label='of'
           prefix='Rp'
           errorMessage={errors?.value6?.message}
           {...register('value6')}
@@ -219,6 +243,49 @@ export const TpSl = () => {
         <button
           type='button'
           onClick={onSubmit3}
+          className='text-purple-700 hover:text-white border border-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-purple-400 dark:text-purple-400 dark:hover:text-white dark:hover:bg-purple-500 dark:focus:ring-purple-900'
+        >
+          Calculate
+        </button>
+      </div>
+      {/* SECTION 4 */}
+      <div className='relative mt-8'>
+        <Input
+          prefix='Rp'
+          errorMessage={errors?.value7?.message}
+          {...register('value7')}
+          onChange={() => clearErrors('value7')}
+        />
+        <Input
+          label='is what percent of'
+          prefix='Rp'
+          errorMessage={errors?.value8?.message}
+          {...register('value8')}
+          onChange={() => clearErrors('value8')}
+        />
+        {watch('result4') && (
+          <div className='mb-6 w-full'>
+            <label
+              htmlFor='default-input'
+              className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'
+            >
+              Result
+            </label>
+            <label className='block mb-2 text-sm  text-gray-900 dark:text-white'>
+              {watch('result4')}
+            </label>
+          </div>
+        )}
+        <button
+          onClick={onReset4}
+          type='button'
+          className='text-purple-700 hover:text-white border border-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-purple-400 dark:text-purple-400 dark:hover:text-white dark:hover:bg-purple-500 dark:focus:ring-purple-900'
+        >
+          Reset
+        </button>
+        <button
+          type='button'
+          onClick={onSubmit4}
           className='text-purple-700 hover:text-white border border-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-purple-400 dark:text-purple-400 dark:hover:text-white dark:hover:bg-purple-500 dark:focus:ring-purple-900'
         >
           Calculate
