@@ -1,3 +1,5 @@
+import Logo from '@/images/cuan-cal.svg'
+
 export const Header = () => {
   return (
     <header className='grid grid-cols-1 text-center lg:text-start lg:grid-cols-2 max-w-[1100px] flex mx-auto mt-20 px-4'>
@@ -33,7 +35,7 @@ export const Header = () => {
         <img
           id='test3'
           className=''
-          src='https://vitejs.dev/logo-with-shadow.png'
+          src={Logo}
           alt='Vite'
           data-v-d43214f0=''
         />

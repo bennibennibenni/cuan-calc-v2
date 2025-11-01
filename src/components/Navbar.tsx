@@ -1,4 +1,4 @@
-import Logo from '@/images/vite-logo.svg'
+import Logo from '@/images/cuan-cal.svg'
 
 export const Navbar = () => {
   return (
