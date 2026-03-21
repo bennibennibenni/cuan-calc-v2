@@ -1,15 +1,25 @@
-// import { Divider } from '@/components/Divider'
+import React from 'react';
 
-export const Footer = () => {
-  return (
-    <footer>
-      {/* <Divider /> */}
-      <div className='container mx-auto text-center text-gray-400 text-sm '>
-        <p className='w-full font-[500] text-sm text-gray-400 pb-2'>
-          © 2024 Benni. All rights reserved
-        </p>
-        <p>Crafted with ❤️ using Vite.</p>
-      </div>
-    </footer>
-  )
+export interface FooterProps extends React.HTMLAttributes<HTMLElement> {
+  readonly className?: string;
 }
+
+export const Footer = React.forwardRef<HTMLElement, FooterProps>(
+  ({ className = '', ...props }, ref) => {
+    const year = new Date().getFullYear();
+    return (
+      <footer ref={ref} className={`border-t border-gray-700/50 py-8 ${className}`.trim()} role='contentinfo' {...props}>
+        <div className='max-w-[1200px] mx-auto px-6 text-center'>
+          <p className='font-body-sm text-gray-500'>
+            © {year} Benni. All rights reserved
+          </p>
+          <p className='mt-1 font-body-sm text-gray-500'>
+            Crafted with care using Vite
+          </p>
+        </div>
+      </footer>
+    );
+  }
+);
+
+Footer.displayName = 'Footer';

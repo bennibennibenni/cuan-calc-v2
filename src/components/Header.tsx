@@ -1,45 +1,39 @@
+import React from 'react';
 import Logo from '@/images/cuan-cal.svg'
 
-export const Header = () => {
-  return (
-    <header className='grid grid-cols-1 text-center lg:text-start lg:grid-cols-2 max-w-[1100px] flex mx-auto mt-20 px-4'>
-      <div className='mt-56 lg:mt-0'>
-        <div className='text-[50px] md:text-[56px] font-bold'>
-          <h1 id='test'>Cuan calculator</h1>
-        </div>
-        <div className='text-[35px] md:text-[45px] font-[700] mb-4 max-w-[550px] mx-auto sm:px-20 text-center md:text-start md:px-0 text-gray-100'>
-          <h1 className='leading-none '>
-            Track and Forecast Your Gains Effortlessly
-          </h1>
-        </div>
-        <div className='font-[500] text-[20px] md:text-[24px] text-gray-400 max-w-[550px] mx-auto'>
-          <h1>Quickly calculate your profit or revenue.</h1>
-        </div>
-        {/* <div className="flex pt-8 justify-center flex-wrap lg:justify-start space-x-6 gap-y-4 font-[600] text-[14px] text-white">
-          <button className="shadow-xl border border-gray-600 bg-button-color rounded-2xl p-2 px-4 w-fit">
-            Get Started
-          </button>
-          <button className="shadow-xl border border-gray-600 bg-button-color-2 rounded-2xl p-2 px-4 w-fit">
-            Why Vite?
-          </button>
-          <button className="shadow-xl border border-gray-600 bg-button-color-2 rounded-2xl p-2 px-4 w-fit">
-            View On GitHub
-          </button>
-        </div> */}
+export interface HeaderProps extends React.HTMLAttributes<HTMLElement> {
+  readonly className?: string;
+}
+
+export const Header = React.forwardRef<HTMLElement, HeaderProps>(
+  ({ className = '', ...props }, ref) => (
+    <header
+      ref={ref}
+      className={`grid max-w-[1100px] mx-auto mt-8 px-4 grid-cols-1 lg:grid-cols-2 gap-8 items-center text-center lg:text-start min-h-0 py-4 lg:py-0 ${className}`.trim()}
+      aria-label='Hero'
+      {...props}
+    >
+      <div className='mt-0 lg:mt-8'>
+        <h1 className='hero-title text-[80px] md:text-[110px] font-heading-xl'>
+          Cuan calculator
+        </h1>
+        <p className='font-heading-lg text-[36px] md:text-[48px] text-gray-100 max-w-[800px] mx-auto lg:mx-0 mt-6'>
+          Track and Forecast Your Gains Effortlessly
+        </p>
+        <p className='font-body-lg text-[28px] md:text-[36px] text-gray-400 max-w-[800px] mx-auto lg:mx-0 mt-6'>
+          Quickly calculate your profit or revenue.
+        </p>
       </div>
-      <div className='flex justify-center'>
-        <div
-          id='test2'
-          className='md:mt-10'
-        ></div>
+      <div className='flex justify-center items-center relative'>
+        {/* <div className='hero-glow absolute w-16 h-16 md:w-20 md:h-20 bg-black bg-opacity-40' aria-hidden /> */}
         <img
-          id='test3'
-          className=''
           src={Logo}
-          alt='Vite'
-          data-v-d43214f0=''
+          alt='Cuan calculator'
+          className='hero-image relative w-50 h-50 md:w-65 md:h-65 drop-shadow-lg contrast-125'
         />
       </div>
     </header>
   )
-}
+);
+
+Header.displayName = 'Header';

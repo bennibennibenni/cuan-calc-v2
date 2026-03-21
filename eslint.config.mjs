@@ -1,3 +1,4 @@
+// Removed stray 'fa' for cleanliness and correctness
 import { FlatCompat } from '@eslint/eslintrc';
 import js from '@eslint/js';
 import typescriptEslint from '@typescript-eslint/eslint-plugin';
@@ -36,7 +37,35 @@ const eslintConfig = [
       },
     },
     rules: {
+      // Formatting
+      'indent': ['error', 2],
+      'quotes': ['error', 'single'],
+      'semi': ['error', 'always'],
+      'comma-dangle': ['error', 'always-multiline'],
+      'object-curly-spacing': ['error', 'always'],
+      'array-bracket-spacing': ['error', 'never'],
+      'eol-last': ['error', 'always'],
+      'no-trailing-spaces': 'error',
+      'prettier/prettier': ['error'],
+      // TypeScript
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/explicit-function-return-type': 'warn',
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/strict-boolean-expressions': 'warn',
+      // Accessibility
+      'jsx-a11y/alt-text': 'warn',
+      'jsx-a11y/aria-role': 'warn',
+      'jsx-a11y/aria-props': 'warn',
+      'jsx-a11y/aria-unsupported-elements': 'warn',
+      // Import sorting
+      'simple-import-sort/imports': 'error',
+      'simple-import-sort/exports': 'error',
+      // Unused imports
+      'unused-imports/no-unused-imports': 'error',
+      // React
       'react/react-in-jsx-scope': 'off',
+      'react/jsx-uses-react': 'off',
+      'react/jsx-uses-vars': 'error',
     },
   },
 ];

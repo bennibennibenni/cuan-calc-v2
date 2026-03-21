@@ -2,13 +2,23 @@ import { Header } from '@/components/Header'
 import { HeroCard } from '@/components/HeroCard'
 import { useNavigate } from 'react-router-dom'
 
-export const StockInvestment = () => {
+/**
+ * StockInvestment page provides tools for stock trading calculations.
+ * Includes navigation to profit/loss, TP/SL, dividends, and risk management tools.
+ *
+ * @component
+ * @returns {JSX.Element}
+ */
+export const StockInvestment = (): JSX.Element => {
   const navigate = useNavigate()
 
   return (
     <div>
       <Header />
-      <main className='grid md:px-12 lg:px-auto px-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:mt-24 mt-[-130pxs] max-w-[1200px] mx-auto mb-16 mt-16'>
+      <main
+        className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-6 md:px-12 max-w-[1200px] mx-auto mt-12 lg:mt-24 mb-16'
+        aria-label='Stock investment tools'
+      >
         <HeroCard
           title='Profit and loss'
           desc='Calculate the potential profit or loss of a trade or investment.'
@@ -27,7 +37,7 @@ export const StockInvestment = () => {
         />
         <HeroCard
           title='Devidends'
-          desc=' Estimate expected income from dividend-paying investments.'
+          desc='Estimate expected income from dividend-paying investments.'
           icon='🏦'
           onClick={() => {
             navigate('/stock-investment/devidends')
@@ -53,7 +63,9 @@ export const StockInvestment = () => {
           title='Compound interest'
           desc='Project the future value of investments with compound interest.'
           icon='🔄'
-          disabled
+          onClick={() => {
+            navigate('/stock-investment/compound-interest')
+          }}
         />
       </main>
     </div>

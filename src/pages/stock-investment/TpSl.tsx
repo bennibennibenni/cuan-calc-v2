@@ -1,7 +1,10 @@
-import { Input } from '@/components/Input.tsx'
+import { Button } from '@/components/Button'
+import { FormResult } from '@/components/FormResult'
+import { Input } from '@/components/Input'
 import { Layout } from '@/components/Layout'
+import { formatIdr } from '@/utils/format'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import * as yup from 'yup'
 
 export const TpSl = () => {
@@ -21,12 +24,11 @@ export const TpSl = () => {
   })
 
   const {
-    register,
-    reset,
+    control,
+    resetField,
     setValue,
     getValues,
     watch,
-    trigger,
     formState: { errors },
     clearErrors,
   } = useForm({
@@ -34,81 +36,117 @@ export const TpSl = () => {
   })
 
   const onReset1 = () => {
-    reset({
-      value1: '',
-      value2: '',
-    })
+    resetField('value1')
+    resetField('value2')
+    setValue('result1', '')
   }
 
   const onReset2 = () => {
-    reset({
-      value3: '',
-      value4: '',
-    })
+    resetField('value3')
+    resetField('value4')
+    setValue('result2', '')
   }
 
   const onReset3 = () => {
-    reset({
-      value5: '',
-      value6: '',
-    })
+    resetField('value5')
+    resetField('value6')
+    setValue('result3', '')
   }
 
   const onReset4 = () => {
-    reset({
-      value7: '',
-      value8: '',
-    })
+    resetField('value7')
+    resetField('value8')
+    setValue('result4', '')
   }
 
-  const onSubmit1 = async () => {
-    const isValid = await trigger(['value1', 'value2'])
-    if (isValid) {
-      const { value1, value2 } = getValues()
-      const value1Number = parseFloat(value1)
-      const value2Number = parseFloat(value2)
-      const tempResult1 = value1Number / 100
-      const tempResult2 = tempResult1 * value2Number
-      const finalResult = tempResult2 + value2Number
-      setValue('result1', 'Rp' + ' ' + finalResult)
+  const calculate1 = () => {
+    const { value1, value2 } = getValues()
+    if (
+      (value1 ?? '').toString().trim() === '' ||
+      (value2 ?? '').toString().trim() === ''
+    ) {
+      setValue('result1', '')
+      return
     }
+    const value1Number = Number(value1)
+    const value2Number = Number(value2)
+    if (!Number.isFinite(value1Number) || !Number.isFinite(value2Number)) {
+      setValue('result1', '')
+      return
+    }
+    const tempResult1 = value1Number / 100
+    const tempResult2 = tempResult1 * value2Number
+    const finalResult = tempResult2 + value2Number
+    setValue('result1', formatIdr(finalResult, 0))
   }
 
-  const onSubmit2 = async () => {
-    const isValid = await trigger(['value3', 'value4'])
-    if (isValid) {
-      const { value3, value4 } = getValues()
-      const value3Number = parseFloat(value3)
-      const value4Number = parseFloat(value4)
-      const tempResult1 = value3Number / 100
-      const tempResult2 = tempResult1 * value4Number
-      const finalResult = value4Number - tempResult2
-      setValue('result2', 'Rp' + ' ' + finalResult)
+  const calculate2 = () => {
+    const { value3, value4 } = getValues()
+    if (
+      (value3 ?? '').toString().trim() === '' ||
+      (value4 ?? '').toString().trim() === ''
+    ) {
+      setValue('result2', '')
+      return
     }
+    const value3Number = Number(value3)
+    const value4Number = Number(value4)
+    if (!Number.isFinite(value3Number) || !Number.isFinite(value4Number)) {
+      setValue('result2', '')
+      return
+    }
+    const tempResult1 = value3Number / 100
+    const tempResult2 = tempResult1 * value4Number
+    const finalResult = value4Number - tempResult2
+    setValue('result2', formatIdr(finalResult, 0))
   }
 
-  const onSubmit3 = async () => {
-    const isValid = await trigger(['value5', 'value6'])
-    if (isValid) {
-      const { value5, value6 } = getValues()
-      const value5Number = parseFloat(value5)
-      const value6Number = parseFloat(value6)
-      const tempResult1 = value5Number / 100
-      const finalResult = tempResult1 * value6Number
-      setValue('result3', 'Rp' + ' ' + finalResult)
+  const calculate3 = () => {
+    const { value5, value6 } = getValues()
+    if (
+      (value5 ?? '').toString().trim() === '' ||
+      (value6 ?? '').toString().trim() === ''
+    ) {
+      setValue('result3', '')
+      return
     }
+    const value5Number = Number(value5)
+    const value6Number = Number(value6)
+    if (!Number.isFinite(value5Number) || !Number.isFinite(value6Number)) {
+      setValue('result3', '')
+      return
+    }
+    const tempResult1 = value5Number / 100
+    const finalResult = tempResult1 * value6Number
+    setValue('result3', formatIdr(finalResult, 0))
   }
 
-  const onSubmit4 = async () => {
-    const isValid = await trigger(['value7', 'value8'])
-    if (isValid) {
-      const { value7, value8 } = getValues()
-      const value7Number = parseFloat(value7)
-      const value8Number = parseFloat(value8)
-      const tempResult1 = value7Number * 100
-      const finalResult = tempResult1 / value8Number
-      setValue('result4', finalResult + ' ' + '%')
+  const calculate4 = () => {
+    const { value7, value8 } = getValues()
+    if (
+      (value7 ?? '').toString().trim() === '' ||
+      (value8 ?? '').toString().trim() === ''
+    ) {
+      setValue('result4', '')
+      return
     }
+    const value7Number = Number(value7)
+    const value8Number = Number(value8)
+    if (
+      !Number.isFinite(value7Number) ||
+      !Number.isFinite(value8Number) ||
+      value8Number === 0
+    ) {
+      setValue('result4', '')
+      return
+    }
+    const tempResult1 = value7Number * 100
+    const finalResult = tempResult1 / value8Number
+    const formattedPct = new Intl.NumberFormat(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(finalResult)
+    setValue('result4', `${formattedPct}%`)
   }
 
   return (
@@ -118,178 +156,250 @@ export const TpSl = () => {
       title='Take profit and stop loss'
     >
       <div className='relative mt-8'>
-        <Input
-          label='Increase'
-          postfix='%'
-          errorMessage={errors?.value1?.message}
-          {...register('value1')}
-          onChange={() => clearErrors('value1')}
+        <Controller
+          name='value1'
+          control={control}
+          render={({ field }) => (
+            <Input
+              label='Increase'
+              postfix='%'
+              errorMessage={errors?.value1?.message}
+              formatThousands
+              value={field.value}
+              onChange={(e) => {
+                const val = typeof e === 'string' ? e : e.target.value
+                field.onChange(val)
+                clearErrors('value1')
+              }}
+              onBlur={(e) => {
+                field.onBlur(e)
+                calculate1()
+              }}
+              type='number'
+              inputMode='numeric'
+            />
+          )}
         />
-        <Input
-          label='of'
-          prefix='Rp'
-          errorMessage={errors?.value2?.message}
-          {...register('value2')}
-          onChange={() => clearErrors('value2')}
+        <Controller
+          name='value2'
+          control={control}
+          render={({ field }) => (
+            <Input
+              label='of'
+              prefix='Rp'
+              errorMessage={errors?.value2?.message}
+              formatThousands
+              value={field.value}
+              onChange={(e) => {
+                const val = typeof e === 'string' ? e : e.target.value
+                field.onChange(val)
+                clearErrors('value2')
+              }}
+              onBlur={(e) => {
+                field.onBlur(e)
+                calculate1()
+              }}
+              type='number'
+              inputMode='numeric'
+            />
+          )}
         />
         {watch('result1') && (
-          <div className='mb-6 w-full'>
-            <label
-              htmlFor='default-input'
-              className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'
-            >
-              Result
-            </label>
-            <label className='block mb-2 text-sm  text-gray-900 dark:text-white'>
-              {watch('result1')}
-            </label>
-          </div>
+          <FormResult
+            label='Result'
+            value={watch('result1') ?? ''}
+          />
         )}
-        <button
-          onClick={onReset1}
+        <Button
           type='button'
-          className='text-purple-700 hover:text-white border border-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-purple-400 dark:text-purple-400 dark:hover:text-white dark:hover:bg-purple-500 dark:focus:ring-purple-900'
+          onClick={onReset1}
+          variant='secondary'
         >
           Reset
-        </button>
-        <button
-          type='button'
-          onClick={onSubmit1}
-          className='text-purple-700 hover:text-white border border-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-purple-400 dark:text-purple-400 dark:hover:text-white dark:hover:bg-purple-500 dark:focus:ring-purple-900'
-        >
-          Calculate
-        </button>
+        </Button>
       </div>
       {/* SECTION 2 */}
       <div className='relative mt-8'>
-        <Input
-          label='Decrease'
-          postfix='%'
-          errorMessage={errors?.value3?.message}
-          {...register('value3')}
-          onChange={() => clearErrors('value3')}
+        <Controller
+          name='value3'
+          control={control}
+          render={({ field }) => (
+            <Input
+              label='Decrease'
+              postfix='%'
+              errorMessage={errors?.value3?.message}
+              formatThousands
+              value={field.value}
+              onChange={(e) => {
+                const val = typeof e === 'string' ? e : e.target.value
+                field.onChange(val)
+                clearErrors('value3')
+              }}
+              onBlur={(e) => {
+                field.onBlur(e)
+                calculate2()
+              }}
+              type='number'
+              inputMode='numeric'
+            />
+          )}
         />
-        <Input
-          label='of'
-          prefix='Rp'
-          errorMessage={errors?.value4?.message}
-          {...register('value4')}
-          onChange={() => clearErrors('value4')}
+        <Controller
+          name='value4'
+          control={control}
+          render={({ field }) => (
+            <Input
+              label='of'
+              prefix='Rp'
+              errorMessage={errors?.value4?.message}
+              formatThousands
+              value={field.value}
+              onChange={(e) => {
+                const val = typeof e === 'string' ? e : e.target.value
+                field.onChange(val)
+                clearErrors('value4')
+              }}
+              onBlur={(e) => {
+                field.onBlur(e)
+                calculate2()
+              }}
+              type='number'
+              inputMode='numeric'
+            />
+          )}
         />
         {watch('result2') && (
-          <div className='mb-6 w-full'>
-            <label
-              htmlFor='default-input'
-              className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'
-            >
-              Result
-            </label>
-            <label className='block mb-2 text-sm  text-gray-900 dark:text-white'>
-              {watch('result2')}
-            </label>
-          </div>
+          <FormResult
+            label='Result'
+            value={watch('result2') ?? ''}
+          />
         )}
-        <button
-          onClick={onReset2}
+        <Button
           type='button'
-          className='text-purple-700 hover:text-white border border-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-purple-400 dark:text-purple-400 dark:hover:text-white dark:hover:bg-purple-500 dark:focus:ring-purple-900'
+          onClick={onReset2}
+          variant='secondary'
         >
           Reset
-        </button>
-        <button
-          type='button'
-          onClick={onSubmit2}
-          className='text-purple-700 hover:text-white border border-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-purple-400 dark:text-purple-400 dark:hover:text-white dark:hover:bg-purple-500 dark:focus:ring-purple-900'
-        >
-          Calculate
-        </button>
+        </Button>
       </div>
       {/* SECTION 3 */}
       <div className='relative mt-8'>
-        <Input
-          label='What is'
-          postfix='%'
-          errorMessage={errors?.value5?.message}
-          {...register('value5')}
-          onChange={() => clearErrors('value5')}
+        <Controller
+          name='value5'
+          control={control}
+          render={({ field }) => (
+            <Input
+              label='What is'
+              postfix='%'
+              errorMessage={errors?.value5?.message}
+              formatThousands
+              value={field.value}
+              onChange={(e) => {
+                const val = typeof e === 'string' ? e : e.target.value
+                field.onChange(val)
+                clearErrors('value5')
+              }}
+              onBlur={(e) => {
+                field.onBlur(e)
+                calculate3()
+              }}
+            />
+          )}
         />
-        <Input
-          label='of'
-          prefix='Rp'
-          errorMessage={errors?.value6?.message}
-          {...register('value6')}
-          onChange={() => clearErrors('value6')}
+        <Controller
+          name='value6'
+          control={control}
+          render={({ field }) => (
+            <Input
+              label='of'
+              prefix='Rp'
+              errorMessage={errors?.value6?.message}
+              formatThousands
+              value={field.value}
+              onChange={(e) => {
+                const val = typeof e === 'string' ? e : e.target.value
+                field.onChange(val)
+                clearErrors('value6')
+              }}
+              onBlur={(e) => {
+                field.onBlur(e)
+                calculate3()
+              }}
+            />
+          )}
         />
         {watch('result3') && (
-          <div className='mb-6 w-full'>
-            <label
-              htmlFor='default-input'
-              className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'
-            >
-              Result
-            </label>
-            <label className='block mb-2 text-sm  text-gray-900 dark:text-white'>
-              {watch('result3')}
-            </label>
-          </div>
+          <FormResult
+            label='Result'
+            value={watch('result3') ?? ''}
+          />
         )}
-        <button
-          onClick={onReset3}
+        <Button
           type='button'
-          className='text-purple-700 hover:text-white border border-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-purple-400 dark:text-purple-400 dark:hover:text-white dark:hover:bg-purple-500 dark:focus:ring-purple-900'
+          onClick={onReset3}
+          variant='secondary'
         >
           Reset
-        </button>
-        <button
-          type='button'
-          onClick={onSubmit3}
-          className='text-purple-700 hover:text-white border border-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-purple-400 dark:text-purple-400 dark:hover:text-white dark:hover:bg-purple-500 dark:focus:ring-purple-900'
-        >
-          Calculate
-        </button>
+        </Button>
       </div>
       {/* SECTION 4 */}
       <div className='relative mt-8'>
-        <Input
-          prefix='Rp'
-          errorMessage={errors?.value7?.message}
-          {...register('value7')}
-          onChange={() => clearErrors('value7')}
+        <Controller
+          name='value7'
+          control={control}
+          render={({ field }) => (
+            <Input
+              prefix='Rp'
+              errorMessage={errors?.value7?.message}
+              formatThousands
+              value={field.value}
+              onChange={(e) => {
+                const val = typeof e === 'string' ? e : e.target.value
+                field.onChange(val)
+                clearErrors('value7')
+              }}
+              onBlur={(e) => {
+                field.onBlur(e)
+                calculate4()
+              }}
+            />
+          )}
         />
-        <Input
-          label='is what percent of'
-          prefix='Rp'
-          errorMessage={errors?.value8?.message}
-          {...register('value8')}
-          onChange={() => clearErrors('value8')}
+        <Controller
+          name='value8'
+          control={control}
+          render={({ field }) => (
+            <Input
+              label='is what percent of'
+              prefix='Rp'
+              errorMessage={errors?.value8?.message}
+              formatThousands
+              value={field.value}
+              onChange={(e) => {
+                const val = typeof e === 'string' ? e : e.target.value
+                field.onChange(val)
+                clearErrors('value8')
+              }}
+              onBlur={(e) => {
+                field.onBlur(e)
+                calculate4()
+              }}
+            />
+          )}
         />
         {watch('result4') && (
-          <div className='mb-6 w-full'>
-            <label
-              htmlFor='default-input'
-              className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'
-            >
-              Result
-            </label>
-            <label className='block mb-2 text-sm  text-gray-900 dark:text-white'>
-              {watch('result4')}
-            </label>
-          </div>
+          <FormResult
+            label='Result'
+            value={watch('result4') ?? ''}
+          />
         )}
-        <button
-          onClick={onReset4}
+        <Button
           type='button'
-          className='text-purple-700 hover:text-white border border-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-purple-400 dark:text-purple-400 dark:hover:text-white dark:hover:bg-purple-500 dark:focus:ring-purple-900'
+          onClick={onReset4}
+          variant='secondary'
         >
           Reset
-        </button>
-        <button
-          type='button'
-          onClick={onSubmit4}
-          className='text-purple-700 hover:text-white border border-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-purple-400 dark:text-purple-400 dark:hover:text-white dark:hover:bg-purple-500 dark:focus:ring-purple-900'
-        >
-          Calculate
-        </button>
+        </Button>
       </div>
     </Layout>
   )

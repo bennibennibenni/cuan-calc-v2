@@ -1,7 +1,8 @@
 import { Input } from '@/components/Input'
+import { formatIdr } from '@/utils/format'
 import { Layout } from '@/components/Layout'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useForm } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
 export const CashbackReward = () => {
@@ -12,7 +13,7 @@ export const CashbackReward = () => {
   })
 
   const {
-    register,
+    control,
     reset,
     setValue,
     getValues,
@@ -29,20 +30,39 @@ export const CashbackReward = () => {
       cashbackPercentage: '',
       maxCashback: '',
     })
+    setValue('result', '')
   }
 
   const onSubmit = async () => {
     const isValid = await trigger()
-    if (isValid) {
-      const { cashbackPercentage, maxCashback } = getValues()
-      const parseCashbackPercentagetToNumber = parseFloat(
-        cashbackPercentage as string
-      )
-      const parseMaxCashbackToNumber = parseFloat(maxCashback as string)
-      const tempResult = parseCashbackPercentagetToNumber / 100
-      const tempResult2 = parseMaxCashbackToNumber / tempResult
-      setValue('result', 'Rp' + ' ' + tempResult2)
+    if (!isValid) return
+    const { cashbackPercentage, maxCashback } = getValues()
+    const parseCashbackPercentagetToNumber = Number(cashbackPercentage)
+    const parseMaxCashbackToNumber = Number(maxCashback)
+    if (!Number.isFinite(parseCashbackPercentagetToNumber) || !Number.isFinite(parseMaxCashbackToNumber)) {
+      setValue('result', '')
+      return
     }
+    const tempResult = parseCashbackPercentagetToNumber / 100
+    const tempResult2 = parseMaxCashbackToNumber / tempResult
+    setValue('result', formatIdr(tempResult2, 0))
+  }
+
+  const calculateAndSet = () => {
+    const { cashbackPercentage, maxCashback } = getValues()
+    if ((cashbackPercentage ?? '').toString().trim() === '' || (maxCashback ?? '').toString().trim() === '') {
+      setValue('result', '')
+      return
+    }
+    const parseCashbackPercentagetToNumber = Number(cashbackPercentage)
+    const parseMaxCashbackToNumber = Number(maxCashback)
+    if (!Number.isFinite(parseCashbackPercentagetToNumber) || !Number.isFinite(parseMaxCashbackToNumber)) {
+      setValue('result', '')
+      return
+    }
+    const tempResult = parseCashbackPercentagetToNumber / 100
+    const tempResult2 = parseMaxCashbackToNumber / tempResult
+    setValue('result', formatIdr(tempResult2, 0))
   }
 
   return (
@@ -52,28 +72,63 @@ export const CashbackReward = () => {
       title='Cashback reward'
     >
       <div className='relative mt-8'>
-        <Input
-          label='Cashback percentage'
-          postfix='%'
-          errorMessage={errors?.cashbackPercentage?.message}
-          {...register('cashbackPercentage')}
-          onChange={() => clearErrors('cashbackPercentage')}
+        <Controller
+          name='cashbackPercentage'
+          control={control}
+          render={({ field }) => (
+            <Input
+              label='Cashback percentage'
+              postfix='%'
+              errorMessage={errors?.cashbackPercentage?.message}
+              formatThousands
+              value={field.value}
+              onChange={(e) => {
+                const val = typeof e === 'string' ? e : e.target.value
+                field.onChange(val)
+                clearErrors('cashbackPercentage')
+              }}
+                type='number'
+                inputMode='numeric'
+              onBlur={(e) => {
+                field.onBlur(e)
+                calculateAndSet()
+              }}
+            />
+          )}
         />
-        <Input
-          label='Maximum cashback'
-          errorMessage={errors?.maxCashback?.message}
-          {...register('maxCashback')}
-          onChange={() => clearErrors('maxCashback')}
+
+        <Controller
+          name='maxCashback'
+          control={control}
+          render={({ field }) => (
+            <Input
+              label='Maximum cashback'
+              errorMessage={errors?.maxCashback?.message}
+              formatThousands
+              value={field.value}
+              onChange={(e) => {
+                const val = typeof e === 'string' ? e : e.target.value
+                field.onChange(val)
+                clearErrors('maxCashback')
+              }}
+                type='number'
+                inputMode='numeric'
+              onBlur={(e) => {
+                field.onBlur(e)
+                calculateAndSet()
+              }}
+            />
+          )}
         />
         {watch('result') && (
           <div className='mb-6 w-full'>
             <label
               htmlFor='default-input'
-              className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'
+              className='block mb-2 font-subheading-sm text-gray-900 dark:text-white'
             >
               Result
             </label>
-            <label className='block mb-2 text-sm  text-gray-900 dark:text-white'>
+            <label className='block mb-2 font-body-sm text-gray-900 dark:text-white'>
               {watch('result')}
             </label>
           </div>
@@ -81,16 +136,9 @@ export const CashbackReward = () => {
         <button
           onClick={onReset}
           type='button'
-          className='text-purple-700 hover:text-white border border-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-purple-400 dark:text-purple-400 dark:hover:text-white dark:hover:bg-purple-500 dark:focus:ring-purple-900'
+          className='text-purple-700 hover:text-white border border-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-hidden focus:ring-purple-300 font-subheading-sm rounded-lg px-5 py-2.5 text-center me-2 mb-2 dark:border-purple-400 dark:text-purple-400 dark:hover:text-white dark:hover:bg-purple-500 dark:focus:ring-purple-900'
         >
           Reset
-        </button>
-        <button
-          type='button'
-          onClick={onSubmit}
-          className='text-purple-700 hover:text-white border border-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-purple-400 dark:text-purple-400 dark:hover:text-white dark:hover:bg-purple-500 dark:focus:ring-purple-900'
-        >
-          Calculate
         </button>
       </div>
     </Layout>

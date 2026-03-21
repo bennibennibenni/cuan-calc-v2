@@ -1,7 +1,7 @@
 import { Input } from '@/components/Input'
 import { Layout } from '@/components/Layout'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useForm } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
 export const RiskManagement = () => {
@@ -14,7 +14,7 @@ export const RiskManagement = () => {
   })
 
   const {
-    register,
+    control,
     reset,
     setValue,
     getValues,
@@ -28,20 +28,49 @@ export const RiskManagement = () => {
 
   const onSubmit = async () => {
     const isValid = await trigger()
-    if (isValid) {
-      const { marketPrice, takeProfitPrice, stopLossPrice } = getValues()
-      const marketPriceNum = parseFloat(marketPrice)
-      const takeProfitPriceNum = parseFloat(takeProfitPrice)
-      const stopLossPriceNum = parseFloat(stopLossPrice)
-      const calcualteProfitPrice1 = takeProfitPriceNum - marketPriceNum
-      const calcualteProfitPrice2 =
-        (calcualteProfitPrice1 * 100) / marketPriceNum
-      const calcualteStopLossPrice1 = marketPriceNum - stopLossPriceNum
-      const calcualteStopLossPrice2 =
-        (calcualteStopLossPrice1 * 100) / marketPriceNum
-      setValue('takeProfitResult', calcualteProfitPrice2 + '%')
-      setValue('stopLossResult', calcualteStopLossPrice2 + '%')
+    if (!isValid) return
+    const { marketPrice, takeProfitPrice, stopLossPrice } = getValues()
+    const marketPriceNum = Number(marketPrice)
+    const takeProfitPriceNum = Number(takeProfitPrice)
+    const stopLossPriceNum = Number(stopLossPrice)
+    if (!Number.isFinite(marketPriceNum) || marketPriceNum === 0) return
+    const calcualteProfitPrice1 = takeProfitPriceNum - marketPriceNum
+    const calcualteProfitPrice2 = (calcualteProfitPrice1 * 100) / marketPriceNum
+    const calcualteStopLossPrice1 = marketPriceNum - stopLossPriceNum
+    const calcualteStopLossPrice2 = (calcualteStopLossPrice1 * 100) / marketPriceNum
+    const fmtProfit = new Intl.NumberFormat(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(calcualteProfitPrice2)
+    const fmtStop = new Intl.NumberFormat(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(calcualteStopLossPrice2)
+    setValue('takeProfitResult', `${fmtProfit}%`)
+    setValue('stopLossResult', `${fmtStop}%`)
+  }
+
+  const calculateAndSet = () => {
+    const { marketPrice, takeProfitPrice, stopLossPrice } = getValues()
+    if (
+      (marketPrice ?? '').toString().trim() === '' ||
+      (takeProfitPrice ?? '').toString().trim() === '' ||
+      (stopLossPrice ?? '').toString().trim() === ''
+    ) {
+      setValue('takeProfitResult', '')
+      setValue('stopLossResult', '')
+      return
     }
+    const marketPriceNum = Number(marketPrice)
+    const takeProfitPriceNum = Number(takeProfitPrice)
+    const stopLossPriceNum = Number(stopLossPrice)
+    if (!Number.isFinite(marketPriceNum) || marketPriceNum === 0) {
+      setValue('takeProfitResult', '')
+      setValue('stopLossResult', '')
+      return
+    }
+    const calcualteProfitPrice1 = takeProfitPriceNum - marketPriceNum
+    const calcualteProfitPrice2 = (calcualteProfitPrice1 * 100) / marketPriceNum
+    const calcualteStopLossPrice1 = marketPriceNum - stopLossPriceNum
+    const calcualteStopLossPrice2 = (calcualteStopLossPrice1 * 100) / marketPriceNum
+    const fmtProfit = new Intl.NumberFormat(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(calcualteProfitPrice2)
+    const fmtStop = new Intl.NumberFormat(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(calcualteStopLossPrice2)
+    setValue('takeProfitResult', `${fmtProfit}%`)
+    setValue('stopLossResult', `${fmtStop}%`)
   }
 
   const onReset = () => {
@@ -61,36 +90,89 @@ export const RiskManagement = () => {
       title='Risk management'
     >
       <div className='relative mt-8'>
-        <Input
-          label='Price'
-          errorMessage={errors?.marketPrice?.message}
-          prefix='Rp'
-          {...register('marketPrice')}
-          onChange={() => clearErrors('marketPrice')}
+        <Controller
+          name='marketPrice'
+          control={control}
+          render={({ field }) => (
+            <Input
+              label='Price'
+              errorMessage={errors?.marketPrice?.message}
+              prefix='Rp'
+              formatThousands
+              value={field.value}
+              onChange={(e) => {
+                const val = typeof e === 'string' ? e : e.target.value
+                field.onChange(val)
+                clearErrors('marketPrice')
+              }}
+              onBlur={(e) => {
+                field.onBlur(e)
+                calculateAndSet()
+              }}
+              type='number'
+              inputMode='numeric'
+            />
+          )}
         />
-        <Input
-          label='Take profit'
-          errorMessage={errors?.takeProfitPrice?.message}
-          prefix='Rp'
-          {...register('takeProfitPrice')}
-          onChange={() => clearErrors('takeProfitPrice')}
+
+        <Controller
+          name='takeProfitPrice'
+          control={control}
+          render={({ field }) => (
+            <Input
+              label='Take profit'
+              errorMessage={errors?.takeProfitPrice?.message}
+              prefix='Rp'
+              formatThousands
+              value={field.value}
+              onChange={(e) => {
+                const val = typeof e === 'string' ? e : e.target.value
+                field.onChange(val)
+                clearErrors('takeProfitPrice')
+              }}
+              onBlur={(e) => {
+                field.onBlur(e)
+                calculateAndSet()
+              }}
+              type='number'
+              inputMode='numeric'
+            />
+          )}
         />
-        <Input
-          label='Stop loss'
-          errorMessage={errors?.stopLossPrice?.message}
-          prefix='Rp'
-          {...register('stopLossPrice')}
-          onChange={() => clearErrors('stopLossPrice')}
+
+        <Controller
+          name='stopLossPrice'
+          control={control}
+          render={({ field }) => (
+            <Input
+              label='Stop loss'
+              errorMessage={errors?.stopLossPrice?.message}
+              prefix='Rp'
+              formatThousands
+              value={field.value}
+              onChange={(e) => {
+                const val = typeof e === 'string' ? e : e.target.value
+                field.onChange(val)
+                clearErrors('stopLossPrice')
+              }}
+              onBlur={(e) => {
+                field.onBlur(e)
+                calculateAndSet()
+              }}
+              type='number'
+              inputMode='numeric'
+            />
+          )}
         />
         {watch('takeProfitResult') && (
           <div className='mb-6 w-full'>
             <label
               htmlFor='default-input'
-              className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'
+              className='block mb-2 font-subheading-sm text-gray-900 dark:text-white'
             >
               Take profit
             </label>
-            <label className='block mb-2 text-sm  text-gray-900 dark:text-white'>
+            <label className='block mb-2 font-body-sm text-gray-900 dark:text-white'>
               {watch('takeProfitResult')}
             </label>
           </div>
@@ -99,11 +181,11 @@ export const RiskManagement = () => {
           <div className='mb-6 w-full'>
             <label
               htmlFor='default-input'
-              className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'
+              className='block mb-2 font-subheading-sm text-gray-900 dark:text-white'
             >
               Stop loss
             </label>
-            <label className='block mb-2 text-sm  text-gray-900 dark:text-white'>
+            <label className='block mb-2 font-body-sm text-gray-900 dark:text-white'>
               {watch('stopLossResult')}
             </label>
           </div>
@@ -111,17 +193,11 @@ export const RiskManagement = () => {
         <button
           onClick={onReset}
           type='button'
-          className='text-purple-700 hover:text-white border border-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-purple-400 dark:text-purple-400 dark:hover:text-white dark:hover:bg-purple-500 dark:focus:ring-purple-900'
+          className='text-purple-700 hover:text-white border border-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-hidden focus:ring-purple-300 font-subheading-sm rounded-lg px-5 py-2.5 text-center me-2 mb-2 dark:border-purple-400 dark:text-purple-400 dark:hover:text-white dark:hover:bg-purple-500 dark:focus:ring-purple-900'
         >
           Reset
         </button>
-        <button
-          type='button'
-          onClick={onSubmit}
-          className='text-purple-700 hover:text-white border border-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-purple-400 dark:text-purple-400 dark:hover:text-white dark:hover:bg-purple-500 dark:focus:ring-purple-900'
-        >
-          Calculate
-        </button>
+        
       </div>
     </Layout>
   )

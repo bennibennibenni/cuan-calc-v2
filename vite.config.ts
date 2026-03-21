@@ -1,12 +1,13 @@
 /// <reference types="vitest" />
 
+import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import { fileURLToPath } from 'url'
 import { defineConfig } from 'vite'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [tailwindcss(), react()],
   resolve: {
     alias: [
       {
@@ -19,5 +20,10 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./vitest.setup.ts'],
+    coverage: {
+      provider: 'c8',
+      reporter: ['text', 'lcov', 'html'],
+      reportsDirectory: 'coverage',
+    },
   },
 })
