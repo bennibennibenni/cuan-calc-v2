@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://cuan-calc-v2.vercel.app/sitemap.xml

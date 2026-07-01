@@ -1,4 +1,3 @@
-import React from 'react'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, it, expect } from 'vitest'
@@ -15,7 +14,7 @@ describe('CurrencyConverter page', () => {
         <CurrencyConverter />
       </MemoryRouter>
     )
-    const input = screen.getByRole('textbox')
+    const input = screen.getByRole('textbox') as HTMLInputElement
     await userEvent.type(input, '10')
     input.blur()
     // either a result or empty string should be acceptable; just ensure no crash and input exists

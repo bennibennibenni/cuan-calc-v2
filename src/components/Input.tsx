@@ -6,27 +6,27 @@ import React, {
   useState,
 } from 'react';
 
-/** Format raw number string with comma thousands (e.g. 1000 → "1,000", 1000000 → "1,000,000") */
+/** Format raw number string with dot thousands (e.g. 1000 → "1.000", 1000000 → "1.000.000") */
 function formatThousands(raw: string): string {
-  if (raw === '' || raw === '.') return raw
-  const [intPart = '', decPart = ''] = raw.split('.')
+  if (raw === '' || raw === ',') return raw
+  const [intPart = '', decPart = ''] = raw.split(',')
   const digitsOnly = intPart.replace(/\D/g, '')
-  const withSeparator = digitsOnly.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+  const withSeparator = digitsOnly.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
   const decimal = decPart.replace(/\D/g, '')
-  return decimal ? `${withSeparator}.${decimal}` : withSeparator
+  return decimal ? `${withSeparator},${decimal}` : withSeparator
 }
 
 /** Parse displayed value back to raw number string for form state */
 function parseFormatted(display: string): string {
-  return display.replace(/,/g, '')
+  return display.replace(/\./g, '').replace(/,/g, '.')
 }
 
 /** Normalize user input to a valid raw number string (digits and at most one decimal point) */
 function toRawInput(value: string): string {
-  const normalized = value.replace(/,/g, '') // strip thousand commas
-  const parts = normalized.split('.')
+  const normalized = value.replace(/\./g, '') // strip thousand dots
+  const parts = normalized.split(',')
   if (parts.length > 2)
-    return toRawInput(parts[0] + '.' + parts.slice(1).join(''))
+    return toRawInput(parts[0] + ',' + parts.slice(1).join(''))
   const intPart = (parts[0] ?? '').replace(/\D/g, '')
   const decPart = (parts[1] ?? '').replace(/\D/g, '')
   if (decPart === '') return intPart
@@ -42,12 +42,13 @@ export type InputProps = Omit<
   readonly errorMessage?: string;
   readonly prefix?: React.ReactNode;
   readonly postfix?: React.ReactNode;
+  readonly containerClassName?: string;
   /** When true, display numbers with thousand separators (e.g. 1,000); form still receives raw value */
   readonly formatThousands?: boolean;
 };
 
 const inputBaseClass =
-  'block w-full p-2.5 font-body-md text-gray-900 dark:text-white bg-hero-card border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-hidden transition disabled:opacity-50 disabled:cursor-not-allowed'
+  'block w-full p-3 font-body-md text-gray-100 bg-white/[0.03] border border-gray-700/50 rounded-xl backdrop-blur-sm focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/50 focus:bg-white/[0.05] focus:shadow-lg focus:shadow-violet-500/10 hover:border-gray-600/70 hover:bg-white/[0.04] outline-hidden transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed placeholder:text-gray-500'
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({
@@ -56,6 +57,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     errorMessage,
     prefix,
     postfix,
+    containerClassName = '',
     formatThousands: enableFormat = false,
     id: idProp,
     value: valueProp,
@@ -92,7 +94,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         if (isControlled) return parseFormatted(String(valueProp ?? ''))
         return parseFormatted(displayValue)
       }
-      return valueProp ?? ''
+      return String(valueProp ?? '')
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -130,7 +132,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       if (!isControlled) {
         inputValue = undefined
       } else {
-        inputValue = valueProp as string | undefined
+        inputValue = String(valueProp)
       }
     } else {
       // For formatted input, show formatted controlled value or internal display
@@ -150,7 +152,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         value={inputValue}
         onChange={handleChange}
         onBlur={handleBlur}
-        className={`${inputBaseClass} ${prefix ? 'ps-10' : ''} ${postfix ? 'pe-10' : ''} ${props.className ?? ''}`.trim()}
+        className={`${inputBaseClass} ${prefix ? 'ps-10' : ''} ${postfix ? 'pe-12' : ''} ${props.className ?? ''}`.trim()}
       />
     );
 
@@ -174,7 +176,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     )
 
     return (
-      <div className='mb-6 w-full'>
+      <div className={`mb-6 w-full ${containerClassName}`.trim()}>
         {label && (
           <label
             htmlFor={id}

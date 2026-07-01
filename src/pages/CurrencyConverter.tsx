@@ -1,37 +1,66 @@
-import { Button } from '@/components/Button';
-import { FormResult } from '@/components/FormResult';
-import { Input } from '@/components/Input';
-import { Layout } from '@/components/Layout';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useLayoutEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import * as yup from 'yup';
+import React from 'react'
+import { Button } from '@/components/Button'
+import { FormResult } from '@/components/FormResult'
+import { Input } from '@/components/Input'
+import { Layout } from '@/components/Layout'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { useLayoutEffect, useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
+import * as yup from 'yup'
 
 interface CurrencyApiResponse {
   usd: {
-    idr: number;
-  };
+    idr: number
+  }
 }
 
-/**
- * CurrencyConverter page allows users to convert USD to IDR using the latest exchange rate.
- * Includes loading and error states for user feedback.
- *
- * @component
- * @returns {JSX.Element}
- */
-export const CurrencyConverter = (): JSX.Element => {
+const defaultValues = {
+  amount: '',
+  data: undefined as number | undefined,
+  result: '',
+}
+
+type FieldRowProps = {
+  readonly icon: React.ReactNode
+  readonly title: string
+  readonly description: string
+  readonly children: React.ReactNode
+}
+
+const FieldRow = ({ icon, title, description, children }: FieldRowProps) => (
+  <div className='grid gap-4 rounded-2xl border border-white/6 bg-white/[0.03] p-3 md:grid-cols-[minmax(0,1fr)_minmax(280px,520px)] md:items-center md:gap-6 md:p-4'>
+    <div className='flex items-start gap-3 md:gap-4'>
+      <div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/6 text-gray-100 ring-1 ring-white/8'>
+        {icon}
+      </div>
+      <div className='min-w-0'>
+        <p className='font-subheading-sm text-gray-100'>{title}</p>
+        <p className='mt-1 text-sm leading-5 text-gray-400'>{description}</p>
+      </div>
+    </div>
+    <div className='md:justify-self-end md:w-full'>{children}</div>
+  </div>
+)
+
+const FieldIcon = ({ children }: { readonly children: React.ReactNode }) => (
+  <svg aria-hidden viewBox='0 0 24 24' className='h-5 w-5' fill='none' stroke='currentColor' strokeWidth={1.9} strokeLinecap='round' strokeLinejoin='round'>
+    {children}
+  </svg>
+)
+
+export const CurrencyConverter = () => {
+  const navigate = useNavigate()
   const schema = yup.object().shape({
     amount: yup.string().required('Oh noes! field must be filled!'),
     data: yup.mixed(),
     result: yup.string(),
-  });
+  })
 
-  const [loading, setLoading] = useState(false);
-  const [fetchError, setFetchError] = useState('');
+  const [fetchError, setFetchError] = useState('')
 
   const {
-    register,
+    control,
     reset,
     setValue,
     getValues,
@@ -40,38 +69,11 @@ export const CurrencyConverter = (): JSX.Element => {
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: yupResolver(schema),
-  });
-
-
-  const calculateAndSet = async () => {
-    setLoading(true);
-    setFetchError('');
-    try {
-      const { data, amount } = getValues();
-      if (!amount || !data) {
-        setValue('result', '');
-        setLoading(false);
-        return;
-      }
-      // Simulate async calculation or fetch
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      const parseAmountToNumber = Number(String(amount));
-      if (!Number.isFinite(parseAmountToNumber)) {
-        setValue('result', '');
-        setLoading(false);
-        return;
-      }
-      setValue('result', (parseAmountToNumber * data).toString());
-      setLoading(false);
-    } catch (err) {
-      setFetchError('Failed to convert currency. Please try again.');
-      setLoading(false);
-    }
-  };
+    defaultValues,
+  })
 
   const onReset = () => {
-    resetField('amount')
-    setValue('result', '')
+    reset(defaultValues)
   }
 
   const onSubmit = () => {
@@ -83,12 +85,17 @@ export const CurrencyConverter = (): JSX.Element => {
   }
 
   const fetchMyAPI = async () => {
-    const response = await fetch(
-      `https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json`
-    )
-    const data: CurrencyApiResponse = await response.json()
-    setValue('data', data?.usd?.idr)
+    try {
+      const response = await fetch(
+        `https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json`
+      )
+      const data: CurrencyApiResponse = await response.json()
+      setValue('data', data?.usd?.idr)
+    } catch (err) {
+      setFetchError('Failed to fetch exchange rate')
+    }
   }
+
   const today = new Date()
   const options: Intl.DateTimeFormatOptions = {
     day: '2-digit',
@@ -109,47 +116,113 @@ export const CurrencyConverter = (): JSX.Element => {
     fetchMyAPI()
   }, [])
 
+  const result = watch('result')
+  const exchangeRate = watch('data')
+
   return (
-    <Layout
-      backNavigation='/'
-      icon='💱'
-      title='Currency converter'
-    >
-      <form onSubmit={handleSubmit(onSubmit)} className='relative mt-8'>
-        {(() => {
-          const amt = register('amount')
-          return (
-            <Input
-              errorMessage={errors?.amount?.message}
-              postfix='USD'
-              formatThousands
-              {...amt}
-              type='number'
-              inputMode='numeric'
-              onBlur={(e) => {
-                amt.onBlur && amt.onBlur(e)
-                calculateAndSet()
-              }}
-            />
-          )
-        })()}
-        {watch('data') != null && (
-          <p className='mb-4 font-body-sm text-gray-400'>
-            1 USD = {formatToCurrency(String(watch('data')))} IDR — {formattedDate}
-          </p>
-        )}
-        {watch('result') && (
-          <FormResult
-            label='Result'
-            value={`${formatToCurrency(watch('result'))} IDR`}
+    <Layout className='max-w-[1040px]'>
+      <section className='space-y-6'>
+        <header className='flex items-start justify-between gap-4'>
+          <div className='flex min-w-0 items-start gap-4'>
+            <div className='flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-purple-700 text-white shadow-[0_0_0_1px_rgba(255,255,255,0.08)]'>
+              <span className='text-4xl leading-none' aria-hidden='true'>💱</span>
+            </div>
+            <div className='min-w-0'>
+              <h1 className='font-heading-md text-gray-100 md:text-[2rem]'>Currency Converter</h1>
+              <p className='mt-1 text-sm text-gray-400 md:text-base'>Convert USD to IDR using live exchange rates</p>
+            </div>
+          </div>
+          <button
+            type='button'
+            onClick={() => navigate('/')}
+            className='flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-white/8 bg-white/[0.03] text-gray-300 transition hover:border-white/12 hover:bg-white/[0.06] hover:text-gray-100 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent cursor-pointer'
+            aria-label='Close currency converter'
+          >
+            <svg aria-hidden viewBox='0 0 24 24' className='h-6 w-6' fill='none' stroke='currentColor' strokeWidth={1.9} strokeLinecap='round' strokeLinejoin='round'>
+              <path d='M6 6l12 12' />
+              <path d='M18 6L6 18' />
+            </svg>
+          </button>
+        </header>
+
+        <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
+          <Controller
+            name='amount'
+            control={control}
+            render={({ field }) => (
+              <FieldRow
+                icon={(
+                  <FieldIcon>
+                    <circle cx='12' cy='12' r='8.25' />
+                    <path d='M9.5 9.5c0-.92.84-1.67 2.5-1.67s2.5.75 2.5 1.67-.82 1.42-2.5 1.83-2.5.9-2.5 1.84.84 1.67 2.5 1.67 2.5-.75 2.5-1.67' />
+                    <path d='M12 7.5v9' />
+                  </FieldIcon>
+                )}
+                title='Amount (USD)'
+                description='Enter the amount in US Dollars'
+              >
+                <Input
+                  containerClassName='mb-0'
+                  errorMessage={errors?.amount?.message || ''}
+                  formatThousands
+                  placeholder='e.g. 100'
+                  postfix='USD'
+                  {...field}
+                  type='number'
+                  inputMode='numeric'
+                  className='h-14 rounded-2xl border-gray-700 bg-[#1a1f2b] px-4 text-right font-subheading-md text-gray-100 placeholder:text-gray-500 focus:border-violet-500 focus:ring-violet-500'
+                />
+              </FieldRow>
+            )}
           />
-        )}
-        <div className='flex flex-wrap gap-3'>
-          <Button type='button' onClick={onReset} variant='secondary' disabled={isSubmitting}>
-            Reset
-          </Button>
-        </div>
-      </form>
+
+          {exchangeRate != null && (
+            <div className='rounded-2xl border border-white/6 bg-white/[0.03] p-4'>
+              <p className='text-sm text-gray-400'>
+                <span className='font-medium text-gray-300'>Exchange Rate:</span> 1 USD = {formatToCurrency(String(exchangeRate))} IDR
+              </p>
+              <p className='mt-1 text-xs text-gray-500'>Updated: {formattedDate}</p>
+            </div>
+          )}
+
+          {result && (
+            <div className='grid gap-3 rounded-3xl border border-white/6 bg-white/[0.03] p-4'>
+              <FormResult
+                className='mb-0 rounded-2xl border border-white/6 bg-white/[0.02] p-4'
+                label='Result'
+                value={`${formatToCurrency(result)} IDR`}
+              />
+            </div>
+          )}
+
+          {fetchError && (
+            <div className='rounded-2xl border border-red-500/20 bg-red-500/10 p-4'>
+              <p className='text-sm text-red-400'>{fetchError}</p>
+            </div>
+          )}
+
+          <div className='flex flex-col-reverse gap-3 border-t border-white/6 pt-4 sm:flex-row sm:justify-between'>
+            <Button
+              type='button'
+              onClick={onReset}
+              variant='secondary'
+              disabled={isSubmitting}
+              className='h-14 px-5 text-gray-200'
+            >
+              <span className='mr-2 text-lg leading-none'>↻</span>{' '}
+              Reset
+            </Button>
+            <Button
+              type='submit'
+              disabled={isSubmitting}
+              className='h-14 min-w-[180px] bg-gradient-to-r from-violet-600 to-purple-600 px-7 text-white shadow-[0_18px_40px_-18px_rgba(124,58,237,0.95)] hover:from-violet-500 hover:to-purple-500'
+            >
+              <span className='mr-2 text-lg leading-none'>⊞</span>
+              {isSubmitting ? 'Converting…' : 'Convert'}
+            </Button>
+          </div>
+        </form>
+      </section>
     </Layout>
   )
 }

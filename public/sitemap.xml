@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Home Page -->
+  <url>
+    <loc>https://cuan-calc-v2.vercel.app/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <!-- Stock Investment Category -->
+  <url>
+    <loc>https://cuan-calc-v2.vercel.app/stock-investment</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Stock Investment Calculators -->
+  <url>
+    <loc>https://cuan-calc-v2.vercel.app/stock-investment/profit-loss</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://cuan-calc-v2.vercel.app/stock-investment/tp-sl</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://cuan-calc-v2.vercel.app/stock-investment/devidends</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://cuan-calc-v2.vercel.app/stock-investment/risk-management</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://cuan-calc-v2.vercel.app/stock-investment/risk-management-percentage</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://cuan-calc-v2.vercel.app/stock-investment/compound-interest</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Money Management Category -->
+  <url>
+    <loc>https://cuan-calc-v2.vercel.app/money-management</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Money Management Calculators -->
+  <url>
+    <loc>https://cuan-calc-v2.vercel.app/money-management/deposit</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://cuan-calc-v2.vercel.app/money-management/cashback-reward</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://cuan-calc-v2.vercel.app/money-management/retirement</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Standalone Tools -->
+  <url>
+    <loc>https://cuan-calc-v2.vercel.app/currency-converter</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://cuan-calc-v2.vercel.app/ratios</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://cuan-calc-v2.vercel.app/calculator</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+</urlset>

@@ -8,7 +8,7 @@ import { Layout } from '@/components/Layout';
  * @component
  * @returns {JSX.Element}
  */
-export const NotFound = (): JSX.Element => {
+export const NotFound = () => {
   return (
     <Layout>
       <div className='flex flex-col items-center justify-center min-h-[200px] text-center'>

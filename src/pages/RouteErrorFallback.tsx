@@ -11,13 +11,13 @@ import { useRouteError, useNavigate } from 'react-router-dom'
  * @component
  * @returns {JSX.Element}
  */
-export function RouteErrorFallback(): JSX.Element {
+export function RouteErrorFallback() {
   const error = useRouteError();
   const navigate = useNavigate();
   const message = error instanceof Error ? error.message : String(error);
 
   return (
-    <div className='pb-12 scroll-smooth'>
+    <div className='scroll-smooth'>
       <Navbar />
       <div className='flex flex-col items-center justify-center min-h-[50vh] text-center px-4'>
         <h1 className='font-heading-md text-gray-100 mb-2' role='heading' aria-level={1}>

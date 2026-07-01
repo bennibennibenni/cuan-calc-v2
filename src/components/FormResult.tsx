@@ -16,9 +16,9 @@ export interface FormResultProps extends React.HTMLAttributes<HTMLDivElement> {
 export const FormResult = React.forwardRef<HTMLDivElement, FormResultProps>(
   ({ label, value, className = '', ...props }, ref) => (
     <div ref={ref} className={`mb-6 w-full ${className}`.trim()} {...props}>
-      <label className='mb-2 font-subheading-sm text-gray-100' aria-label={label}>{label}</label>
-      <div>
-        <span className='font-body-md text-gray-300' aria-live='polite'>{value}</span>
+      <label className='mb-2 block font-subheading-sm text-gray-400' aria-label={label}>{label}</label>
+      <div className='rounded-xl bg-gradient-to-br from-violet-500/10 to-purple-500/10 border border-violet-500/20 p-4 backdrop-blur-sm'>
+        <span className='font-heading-sm text-transparent bg-clip-text bg-gradient-to-r from-violet-300 to-purple-300' aria-live='polite'>{value}</span>
       </div>
     </div>
   )

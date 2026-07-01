@@ -1,4 +1,3 @@
-import React from 'react'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, it, expect } from 'vitest'
@@ -22,6 +21,6 @@ describe('Ratios page', () => {
     inputs[2].blur()
 
     // one of the inputs should be filled by calculation
-    expect(inputs.some((i) => i.value !== '')).toBe(true)
+    expect(inputs.some((i) => (i as HTMLInputElement).value !== '')).toBe(true)
   })
 })

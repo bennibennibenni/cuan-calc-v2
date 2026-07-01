@@ -20,8 +20,8 @@ const Layout = React.forwardRef<HTMLElement, LayoutProps>(
   }, ref) => {
     const navigate = useNavigate();
     return (
-      <main ref={ref} className={`px-6 md:px-12 lg:mt-24 mt-8 max-w-[1200px] mx-auto mb-16 ${className}`.trim()} {...props}>
-        <div className='rounded-xl bg-grey-800 bg-hero-card p-5 shadow-xl ring-2 ring-transparent'>
+      <main ref={ref} className={`px-6 md:px-8 lg:px-12 lg:mt-28 mt-10 max-w-[1200px] mx-auto mb-20 ${className}`.trim()} {...props}>
+        <div className='rounded-2xl bg-grey-800 bg-hero-card p-6 md:p-8 shadow-xl ring-2 ring-transparent'>
           {(title ?? icon ?? backNavigation) !== undefined && (
             <header className='grid grid-cols-3 items-center gap-4'>
               <div className='flex justify-start'>
