@@ -13,6 +13,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      injectRegister: 'inline',
       includeAssets: ['favicon.svg', 'robots.txt'],
       manifest: {
         name: 'Cuan Calculator — Track and Forecast Your Gains',
