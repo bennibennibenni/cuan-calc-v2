@@ -4,7 +4,7 @@ import { FormResult } from '@/components/FormResult'
 import { Input } from '@/components/Input'
 import { Layout } from '@/components/Layout'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useLayoutEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import * as yup from 'yup'
@@ -112,7 +112,7 @@ export const CurrencyConverter = () => {
     }).format(num)
   }
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     fetchMyAPI()
   }, [])
 
