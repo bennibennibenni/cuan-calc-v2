@@ -1,4 +1,3 @@
-import { Header } from '@/components/Header'
 import { HeroCard } from '@/components/HeroCard'
 import { useNavigate } from 'react-router-dom'
 
@@ -14,7 +13,6 @@ export const StockInvestment = () => {
 
   return (
     <div>
-      <Header />
       <div className='mx-auto max-w-[1200px] px-6 md:px-12'>
         <header className='mt-12 mb-8 flex items-start justify-between gap-3 sm:gap-4 lg:mt-24'>
           <div className='min-w-0'>
