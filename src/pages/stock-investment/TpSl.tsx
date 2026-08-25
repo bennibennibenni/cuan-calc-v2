@@ -173,7 +173,7 @@ export const TpSl = () => {
 
         <div className='space-y-6'>
           {/* Section 1: Increase */}
-          <div className='space-y-4 rounded-3xl border border-white/6 bg-white/[0.02] p-3 md:p-4'>
+          <div className='space-y-4 rounded-2xl border border-white/6 bg-white/[0.02] p-3 md:p-4'>
             <h2 className='text-sm font-semibold text-gray-100 md:font-subheading-md'>Calculate Price After Increase</h2>
             <Controller
               name='value1'
@@ -259,7 +259,7 @@ export const TpSl = () => {
           </div>
 
           {/* Section 2: Decrease */}
-          <div className='space-y-4 rounded-3xl border border-white/6 bg-white/[0.02] p-3 md:p-4'>
+          <div className='space-y-4 rounded-2xl border border-white/6 bg-white/[0.02] p-3 md:p-4'>
             <h2 className='text-sm font-semibold text-gray-100 md:font-subheading-md'>Calculate Price After Decrease</h2>
             <Controller
               name='value3'
@@ -345,7 +345,7 @@ export const TpSl = () => {
           </div>
 
           {/* Section 3: What is X% of Y */}
-          <div className='space-y-4 rounded-3xl border border-white/6 bg-white/[0.02] p-3 md:p-4'>
+          <div className='space-y-4 rounded-2xl border border-white/6 bg-white/[0.02] p-3 md:p-4'>
             <h2 className='text-sm font-semibold text-gray-100 md:font-subheading-md'>Calculate Percentage Value</h2>
             <Controller
               name='value5'
@@ -433,7 +433,7 @@ export const TpSl = () => {
           </div>
 
           {/* Section 4: X is what % of Y */}
-          <div className='space-y-4 rounded-3xl border border-white/6 bg-white/[0.02] p-3 md:p-4'>
+          <div className='space-y-4 rounded-2xl border border-white/6 bg-white/[0.02] p-3 md:p-4'>
             <h2 className='text-sm font-semibold text-gray-100 md:font-subheading-md'>Calculate Percentage Ratio</h2>
             <Controller
               name='value7'

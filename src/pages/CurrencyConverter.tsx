@@ -186,7 +186,7 @@ export const CurrencyConverter = () => {
           )}
 
           {result && (
-            <div className='grid gap-3 rounded-3xl border border-white/6 bg-white/[0.03] p-3 md:p-4'>
+            <div className='grid gap-3 rounded-2xl border border-white/6 bg-white/[0.03] p-3 md:p-4'>
               <FormResult
                 className='mb-0 rounded-2xl border border-white/6 bg-white/[0.02] p-3 md:p-4'
                 label='Result'

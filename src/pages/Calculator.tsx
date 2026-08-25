@@ -82,7 +82,7 @@ export const Calculator: React.FC = () => {
 
         <div className='mx-auto max-w-md space-y-4'>
           {/* Display */}
-          <div className='rounded-3xl border border-white/6 bg-white/[0.03] p-4 md:p-6 space-y-3'>
+          <div className='rounded-2xl border border-white/6 bg-white/[0.03] p-4 md:p-6 space-y-3'>
             <div className='rounded-2xl border border-white/6 bg-[#1a1f2b] p-3.5 md:p-4 overflow-x-auto'>
               <div className='text-right font-mono text-2xl text-gray-100 md:text-3xl min-h-[2.5rem] flex items-center justify-end whitespace-nowrap'>
                 {input || '0'}
@@ -98,7 +98,7 @@ export const Calculator: React.FC = () => {
           </div>
 
           {/* Buttons */}
-          <div className='rounded-3xl border border-white/6 bg-white/[0.03] p-3 md:p-4'>
+          <div className='rounded-2xl border border-white/6 bg-white/[0.03] p-3 md:p-4'>
             <div className='grid grid-cols-4 gap-2.5 md:gap-3'>
               {buttonValues.flat().map((val, idx) => {
                 const isOperator = ['+', '-', '*', '/'].includes(val)
