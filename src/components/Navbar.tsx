@@ -15,15 +15,19 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
       aria-label='Main'
       {...props}
     >
-      <div className='flex items-center justify-between gap-4 px-6 py-5 md:px-8 lg:px-12 max-w-[1200px] mx-auto'>
+      <div className='flex items-center justify-between gap-4 px-4 py-3.5 sm:px-6 sm:py-5 md:px-8 lg:px-12 max-w-[1200px] mx-auto'>
         <Link
           to='/'
-          className='flex items-center gap-2 rounded-md outline-hidden transition hover:opacity-90 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:ring-visible:ring-offset-gray-900'
+          className='group flex items-center gap-2.5 rounded-xl outline-hidden transition hover:opacity-95 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:ring-visible:ring-offset-gray-900'
           aria-label='Cuan calculator – go to home'
         >
-          <span className='flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-gradient-to-br from-cyan-400 via-blue-500 to-amber-300 shadow-[0_0_0_1px_rgba(255,255,255,0.08)]'>
-            <span className='flex h-5 w-5 items-center justify-center rounded-[0.3rem] bg-[#0e1221] text-[10px] font-black leading-none text-violet-300'>
-              $
+          <span className='relative flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-violet-500/30 bg-[#15131f] p-px shadow-[0_0_20px_rgba(167,139,250,0.3)] transition duration-300 group-hover:shadow-[0_0_26px_rgba(217,70,239,0.45)] sm:h-9 sm:w-9'>
+            <span className='flex h-full w-full items-center justify-center rounded-[7px] bg-[#15131f]'>
+              <img
+                src='/favicon.svg'
+                alt=''
+                className='h-5 w-5 object-cover sm:h-6 sm:w-6'
+              />
             </span>
           </span>
           <span className='font-subheading-sm text-gray-100 md:font-subheading-md'>

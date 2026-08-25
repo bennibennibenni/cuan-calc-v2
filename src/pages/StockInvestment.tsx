@@ -13,11 +13,11 @@ export const StockInvestment = () => {
 
   return (
     <div>
-      <div className='mx-auto max-w-[1200px] px-6 md:px-12'>
-        <header className='mt-12 mb-8 flex items-start justify-between gap-3 sm:gap-4 lg:mt-24'>
+      <div className='mx-auto max-w-[1200px] px-4 sm:px-6 md:px-12'>
+        <header className='mt-8 sm:mt-12 mb-6 sm:mb-8 flex items-start justify-between gap-3 sm:gap-4 lg:mt-24'>
           <div className='min-w-0'>
-            <h1 className='font-heading-lg text-gray-100'>Stock Investment</h1>
-            <p className='mt-2 text-sm text-gray-400 md:text-base'>Choose a calculation feature to manage your stock investments</p>
+            <h1 className='font-heading-md sm:font-heading-lg text-gray-100'>Stock Investment</h1>
+            <p className='mt-1 sm:mt-2 text-xs sm:text-sm text-gray-400 md:text-base'>Choose a calculation feature to manage your stock investments</p>
           </div>
           <button
             type='button'
@@ -33,7 +33,7 @@ export const StockInvestment = () => {
         </header>
       </div>
       <main
-        className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-6 md:px-12 max-w-[1200px] mx-auto mb-16'
+        className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-4 sm:px-6 md:px-12 max-w-[1200px] mx-auto mb-16'
         aria-label='Stock investment tools'
       >
         <HeroCard

@@ -29,14 +29,14 @@ type FieldRowProps = {
 }
 
 const FieldRow = ({ icon, title, description, children }: FieldRowProps) => (
-  <div className='grid gap-4 rounded-2xl border border-white/6 bg-white/[0.03] p-3 md:grid-cols-[minmax(0,1fr)_minmax(280px,520px)] md:items-center md:gap-6 md:p-4'>
-    <div className='flex items-start gap-3 md:gap-4'>
-      <div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/6 text-gray-100 ring-1 ring-white/8'>
+  <div className='grid gap-3 rounded-xl border border-white/6 bg-white/[0.03] p-3 md:grid-cols-[minmax(0,1fr)_minmax(280px,520px)] md:items-center md:gap-6 md:p-4'>
+    <div className='flex items-start gap-2.5 md:gap-4'>
+      <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white/6 text-gray-100 ring-1 ring-white/8 md:h-12 md:w-12'>
         {icon}
       </div>
       <div className='min-w-0'>
-        <p className='font-subheading-sm text-gray-100'>{title}</p>
-        <p className='mt-1 text-sm leading-5 text-gray-400'>{description}</p>
+        <p className='text-xs font-semibold text-gray-100 md:font-subheading-sm'>{title}</p>
+        <p className='mt-0.5 text-xs leading-4 text-gray-400 md:mt-1 md:text-sm md:leading-5'>{description}</p>
       </div>
     </div>
     <div className='md:justify-self-end md:w-full'>{children}</div>
@@ -150,21 +150,21 @@ export const TpSl = () => {
       <section className='space-y-6'>
         <header className='flex items-start justify-between gap-4'>
           <div className='flex min-w-0 items-start gap-4'>
-            <div className='flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-purple-700 text-white shadow-[0_0_0_1px_rgba(255,255,255,0.08)]'>
-              <span className='text-4xl leading-none' aria-hidden='true'>🎯</span>
+            <div className='flex h-11 w-11 shrink-0 items-center justify-center text-white md:h-16 md:w-16'>
+              <span className='text-2xl leading-none md:text-4xl' aria-hidden='true'>🎯</span>
             </div>
             <div className='min-w-0'>
-              <h1 className='font-heading-md text-gray-100 md:text-[2rem]'>Take Profit & Stop Loss</h1>
-              <p className='mt-1 text-sm text-gray-400 md:text-base'>Calculate percentage-based price targets and gains</p>
+              <h1 className='font-heading-sm text-gray-100 md:font-heading-md md:text-[2rem]'>Take Profit & Stop Loss</h1>
+              <p className='mt-1 text-xs text-gray-400 md:text-base'>Calculate percentage-based price targets and gains</p>
             </div>
           </div>
           <button
             type='button'
             onClick={() => navigate('/stock-investment')}
-            className='flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-white/8 bg-white/[0.03] text-gray-300 transition hover:border-white/12 hover:bg-white/[0.06] hover:text-gray-100 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent cursor-pointer'
+            className='flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/8 bg-white/[0.03] text-gray-300 transition hover:border-white/12 hover:bg-white/[0.06] hover:text-gray-100 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent cursor-pointer md:h-12 md:w-12'
             aria-label='Close calculator'
           >
-            <svg aria-hidden viewBox='0 0 24 24' className='h-6 w-6' fill='none' stroke='currentColor' strokeWidth={1.9} strokeLinecap='round' strokeLinejoin='round'>
+            <svg aria-hidden viewBox='0 0 24 24' className='h-5 w-5 md:h-6 md:w-6' fill='none' stroke='currentColor' strokeWidth={1.9} strokeLinecap='round' strokeLinejoin='round'>
               <path d='M6 6l12 12' />
               <path d='M18 6L6 18' />
             </svg>
@@ -173,8 +173,8 @@ export const TpSl = () => {
 
         <div className='space-y-6'>
           {/* Section 1: Increase */}
-          <div className='space-y-4 rounded-3xl border border-white/6 bg-white/[0.02] p-4'>
-            <h2 className='font-subheading-md text-gray-100'>Calculate Price After Increase</h2>
+          <div className='space-y-4 rounded-3xl border border-white/6 bg-white/[0.02] p-3 md:p-4'>
+            <h2 className='text-sm font-semibold text-gray-100 md:font-subheading-md'>Calculate Price After Increase</h2>
             <Controller
               name='value1'
               control={control}
@@ -198,7 +198,7 @@ export const TpSl = () => {
                     {...field}
                     type='number'
                     inputMode='numeric'
-                    className='h-14 rounded-2xl border-gray-700 bg-[#1a1f2b] px-4 text-right font-subheading-md text-gray-100 placeholder:text-gray-500 focus:border-violet-500 focus:ring-violet-500'
+                    className='h-12 rounded-2xl border-gray-700 bg-[#1a1f2b] px-4 text-right font-subheading-sm text-gray-100 placeholder:text-gray-500 focus:border-violet-500 focus:ring-violet-500 md:h-14 md:font-subheading-md'
                   />
                 </FieldRow>
               )}
@@ -227,13 +227,13 @@ export const TpSl = () => {
                     {...field}
                     type='number'
                     inputMode='numeric'
-                    className='h-14 rounded-2xl border-gray-700 bg-[#1a1f2b] px-4 text-right font-subheading-md text-gray-100 placeholder:text-gray-500 focus:border-violet-500 focus:ring-violet-500'
+                    className='h-12 rounded-2xl border-gray-700 bg-[#1a1f2b] px-4 text-right font-subheading-sm text-gray-100 placeholder:text-gray-500 focus:border-violet-500 focus:ring-violet-500 md:h-14 md:font-subheading-md'
                   />
                 </FieldRow>
               )}
             />
             {result1 && (
-              <div className='rounded-2xl border border-white/6 bg-white/[0.02] p-4'>
+              <div className='rounded-2xl border border-white/6 bg-white/[0.02] p-3 md:p-4'>
                 <FormResult className='mb-0' label='Result' value={result1} />
               </div>
             )}
@@ -242,25 +242,25 @@ export const TpSl = () => {
                 type='button'
                 onClick={resetIncrease}
                 variant='secondary'
-                className='h-12 px-5 text-gray-200'
+                className='h-11 px-4 text-sm text-gray-200 md:h-12 md:px-5 md:text-base'
               >
-                <span className='mr-2 text-lg leading-none'>↻</span>
+                <span className='mr-1.5 text-base leading-none md:mr-2 md:text-lg'>↻</span>
                 Reset
               </Button>
               <Button
                 type='button'
                 onClick={calculateIncrease}
-                className='h-12 min-w-[160px] bg-gradient-to-r from-violet-600 to-purple-600 px-6 text-white shadow-[0_18px_40px_-18px_rgba(124,58,237,0.95)] hover:from-violet-500 hover:to-purple-500'
+                className='h-11 min-w-[140px] bg-gradient-to-r from-violet-600 to-purple-600 px-5 text-sm text-white shadow-[0_18px_40px_-18px_rgba(124,58,237,0.95)] hover:from-violet-500 hover:to-purple-500 md:h-12 md:min-w-[160px] md:px-6 md:text-base'
               >
-                <span className='mr-2 text-lg leading-none'>⊞</span>
+                <span className='mr-1.5 text-base leading-none md:mr-2 md:text-lg'>⊞</span>
                 Calculate
               </Button>
             </div>
           </div>
 
           {/* Section 2: Decrease */}
-          <div className='space-y-4 rounded-3xl border border-white/6 bg-white/[0.02] p-4'>
-            <h2 className='font-subheading-md text-gray-100'>Calculate Price After Decrease</h2>
+          <div className='space-y-4 rounded-3xl border border-white/6 bg-white/[0.02] p-3 md:p-4'>
+            <h2 className='text-sm font-semibold text-gray-100 md:font-subheading-md'>Calculate Price After Decrease</h2>
             <Controller
               name='value3'
               control={control}
@@ -284,7 +284,7 @@ export const TpSl = () => {
                     {...field}
                     type='number'
                     inputMode='numeric'
-                    className='h-14 rounded-2xl border-gray-700 bg-[#1a1f2b] px-4 text-right font-subheading-md text-gray-100 placeholder:text-gray-500 focus:border-violet-500 focus:ring-violet-500'
+                    className='h-12 rounded-2xl border-gray-700 bg-[#1a1f2b] px-4 text-right font-subheading-sm text-gray-100 placeholder:text-gray-500 focus:border-violet-500 focus:ring-violet-500 md:h-14 md:font-subheading-md'
                   />
                 </FieldRow>
               )}
@@ -313,13 +313,13 @@ export const TpSl = () => {
                     {...field}
                     type='number'
                     inputMode='numeric'
-                    className='h-14 rounded-2xl border-gray-700 bg-[#1a1f2b] px-4 text-right font-subheading-md text-gray-100 placeholder:text-gray-500 focus:border-violet-500 focus:ring-violet-500'
+                    className='h-12 rounded-2xl border-gray-700 bg-[#1a1f2b] px-4 text-right font-subheading-sm text-gray-100 placeholder:text-gray-500 focus:border-violet-500 focus:ring-violet-500 md:h-14 md:font-subheading-md'
                   />
                 </FieldRow>
               )}
             />
             {result2 && (
-              <div className='rounded-2xl border border-white/6 bg-white/[0.02] p-4'>
+              <div className='rounded-2xl border border-white/6 bg-white/[0.02] p-3 md:p-4'>
                 <FormResult className='mb-0' label='Result' value={result2} />
               </div>
             )}
@@ -328,25 +328,25 @@ export const TpSl = () => {
                 type='button'
                 onClick={resetDecrease}
                 variant='secondary'
-                className='h-12 px-5 text-gray-200'
+                className='h-11 px-4 text-sm text-gray-200 md:h-12 md:px-5 md:text-base'
               >
-                <span className='mr-2 text-lg leading-none'>↻</span>
+                <span className='mr-1.5 text-base leading-none md:mr-2 md:text-lg'>↻</span>
                 Reset
               </Button>
               <Button
                 type='button'
                 onClick={calculateDecrease}
-                className='h-12 min-w-[160px] bg-gradient-to-r from-violet-600 to-purple-600 px-6 text-white shadow-[0_18px_40px_-18px_rgba(124,58,237,0.95)] hover:from-violet-500 hover:to-purple-500'
+                className='h-11 min-w-[140px] bg-gradient-to-r from-violet-600 to-purple-600 px-5 text-sm text-white shadow-[0_18px_40px_-18px_rgba(124,58,237,0.95)] hover:from-violet-500 hover:to-purple-500 md:h-12 md:min-w-[160px] md:px-6 md:text-base'
               >
-                <span className='mr-2 text-lg leading-none'>⊞</span>
+                <span className='mr-1.5 text-base leading-none md:mr-2 md:text-lg'>⊞</span>
                 Calculate
               </Button>
             </div>
           </div>
 
           {/* Section 3: What is X% of Y */}
-          <div className='space-y-4 rounded-3xl border border-white/6 bg-white/[0.02] p-4'>
-            <h2 className='font-subheading-md text-gray-100'>Calculate Percentage Value</h2>
+          <div className='space-y-4 rounded-3xl border border-white/6 bg-white/[0.02] p-3 md:p-4'>
+            <h2 className='text-sm font-semibold text-gray-100 md:font-subheading-md'>Calculate Percentage Value</h2>
             <Controller
               name='value5'
               control={control}
@@ -372,7 +372,7 @@ export const TpSl = () => {
                     {...field}
                     type='number'
                     inputMode='numeric'
-                    className='h-14 rounded-2xl border-gray-700 bg-[#1a1f2b] px-4 text-right font-subheading-md text-gray-100 placeholder:text-gray-500 focus:border-violet-500 focus:ring-violet-500'
+                    className='h-12 rounded-2xl border-gray-700 bg-[#1a1f2b] px-4 text-right font-subheading-sm text-gray-100 placeholder:text-gray-500 focus:border-violet-500 focus:ring-violet-500 md:h-14 md:font-subheading-md'
                   />
                 </FieldRow>
               )}
@@ -401,13 +401,13 @@ export const TpSl = () => {
                     {...field}
                     type='number'
                     inputMode='numeric'
-                    className='h-14 rounded-2xl border-gray-700 bg-[#1a1f2b] px-4 text-right font-subheading-md text-gray-100 placeholder:text-gray-500 focus:border-violet-500 focus:ring-violet-500'
+                    className='h-12 rounded-2xl border-gray-700 bg-[#1a1f2b] px-4 text-right font-subheading-sm text-gray-100 placeholder:text-gray-500 focus:border-violet-500 focus:ring-violet-500 md:h-14 md:font-subheading-md'
                   />
                 </FieldRow>
               )}
             />
             {result3 && (
-              <div className='rounded-2xl border border-white/6 bg-white/[0.02] p-4'>
+              <div className='rounded-2xl border border-white/6 bg-white/[0.02] p-3 md:p-4'>
                 <FormResult className='mb-0' label='Result' value={result3} />
               </div>
             )}
@@ -416,25 +416,25 @@ export const TpSl = () => {
                 type='button'
                 onClick={resetPercentageValue}
                 variant='secondary'
-                className='h-12 px-5 text-gray-200'
+                className='h-11 px-4 text-sm text-gray-200 md:h-12 md:px-5 md:text-base'
               >
-                <span className='mr-2 text-lg leading-none'>↻</span>
+                <span className='mr-1.5 text-base leading-none md:mr-2 md:text-lg'>↻</span>
                 Reset
               </Button>
               <Button
                 type='button'
                 onClick={calculatePercentageValue}
-                className='h-12 min-w-[160px] bg-gradient-to-r from-violet-600 to-purple-600 px-6 text-white shadow-[0_18px_40px_-18px_rgba(124,58,237,0.95)] hover:from-violet-500 hover:to-purple-500'
+                className='h-11 min-w-[140px] bg-gradient-to-r from-violet-600 to-purple-600 px-5 text-sm text-white shadow-[0_18px_40px_-18px_rgba(124,58,237,0.95)] hover:from-violet-500 hover:to-purple-500 md:h-12 md:min-w-[160px] md:px-6 md:text-base'
               >
-                <span className='mr-2 text-lg leading-none'>⊞</span>
+                <span className='mr-1.5 text-base leading-none md:mr-2 md:text-lg'>⊞</span>
                 Calculate
               </Button>
             </div>
           </div>
 
           {/* Section 4: X is what % of Y */}
-          <div className='space-y-4 rounded-3xl border border-white/6 bg-white/[0.02] p-4'>
-            <h2 className='font-subheading-md text-gray-100'>Calculate Percentage Ratio</h2>
+          <div className='space-y-4 rounded-3xl border border-white/6 bg-white/[0.02] p-3 md:p-4'>
+            <h2 className='text-sm font-semibold text-gray-100 md:font-subheading-md'>Calculate Percentage Ratio</h2>
             <Controller
               name='value7'
               control={control}
@@ -459,7 +459,7 @@ export const TpSl = () => {
                     {...field}
                     type='number'
                     inputMode='numeric'
-                    className='h-14 rounded-2xl border-gray-700 bg-[#1a1f2b] px-4 text-right font-subheading-md text-gray-100 placeholder:text-gray-500 focus:border-violet-500 focus:ring-violet-500'
+                    className='h-12 rounded-2xl border-gray-700 bg-[#1a1f2b] px-4 text-right font-subheading-sm text-gray-100 placeholder:text-gray-500 focus:border-violet-500 focus:ring-violet-500 md:h-14 md:font-subheading-md'
                   />
                 </FieldRow>
               )}
@@ -488,13 +488,13 @@ export const TpSl = () => {
                     {...field}
                     type='number'
                     inputMode='numeric'
-                    className='h-14 rounded-2xl border-gray-700 bg-[#1a1f2b] px-4 text-right font-subheading-md text-gray-100 placeholder:text-gray-500 focus:border-violet-500 focus:ring-violet-500'
+                    className='h-12 rounded-2xl border-gray-700 bg-[#1a1f2b] px-4 text-right font-subheading-sm text-gray-100 placeholder:text-gray-500 focus:border-violet-500 focus:ring-violet-500 md:h-14 md:font-subheading-md'
                   />
                 </FieldRow>
               )}
             />
             {result4 && (
-              <div className='rounded-2xl border border-white/6 bg-white/[0.02] p-4'>
+              <div className='rounded-2xl border border-white/6 bg-white/[0.02] p-3 md:p-4'>
                 <FormResult className='mb-0' label='Result' value={result4} />
               </div>
             )}
@@ -503,17 +503,17 @@ export const TpSl = () => {
                 type='button'
                 onClick={resetPercentageRatio}
                 variant='secondary'
-                className='h-12 px-5 text-gray-200'
+                className='h-11 px-4 text-sm text-gray-200 md:h-12 md:px-5 md:text-base'
               >
-                <span className='mr-2 text-lg leading-none'>↻</span>
+                <span className='mr-1.5 text-base leading-none md:mr-2 md:text-lg'>↻</span>
                 Reset
               </Button>
               <Button
                 type='button'
                 onClick={calculatePercentageRatio}
-                className='h-12 min-w-[160px] bg-gradient-to-r from-violet-600 to-purple-600 px-6 text-white shadow-[0_18px_40px_-18px_rgba(124,58,237,0.95)] hover:from-violet-500 hover:to-purple-500'
+                className='h-11 min-w-[140px] bg-gradient-to-r from-violet-600 to-purple-600 px-5 text-sm text-white shadow-[0_18px_40px_-18px_rgba(124,58,237,0.95)] hover:from-violet-500 hover:to-purple-500 md:h-12 md:min-w-[160px] md:px-6 md:text-base'
               >
-                <span className='mr-2 text-lg leading-none'>⊞</span>
+                <span className='mr-1.5 text-base leading-none md:mr-2 md:text-lg'>⊞</span>
                 Calculate
               </Button>
             </div>

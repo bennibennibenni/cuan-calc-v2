@@ -12,7 +12,7 @@ export const Home = () => {
     <main className='relative overflow-hidden min-h-screen'>
       <Header />
 
-      <section id='tools' className='mx-auto mt-16 max-w-[1180px] px-6 pb-20 lg:mt-20 lg:px-8'>
+      <section id='tools' className='mx-auto mt-10 sm:mt-16 max-w-[1180px] px-4 sm:px-6 pb-16 sm:pb-20 lg:mt-20 lg:px-8'>
         <div className='grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6'>
           <HeroCard
             title='Stock investment'

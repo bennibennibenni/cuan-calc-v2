@@ -12,13 +12,13 @@ interface Props {
 }
 
 const cardClassName = [
-  'group relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.05] to-white/[0.02] p-6 md:p-7 flex flex-col gap-4 text-left w-full min-h-[240px]',
+  'group relative overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-white/[0.05] to-white/[0.02] p-5 sm:p-6 md:p-7 flex flex-col gap-3.5 sm:gap-4 text-left w-full min-h-[200px] sm:min-h-[240px]',
   'shadow-[0_20px_60px_-15px_rgba(0,0,0,0.8)] ring-1 ring-transparent ring-offset-2 ring-offset-transparent',
   'transition-all duration-300 ease-out backdrop-blur-md',
 ].join(' ')
 
 const interactiveClassName = [
-  'cursor-pointer hover:-translate-y-2 hover:border-violet-500/30 hover:bg-gradient-to-br hover:from-white/[0.08] hover:to-white/[0.04] hover:ring-violet-500/50 hover:ring-offset-gray-950 hover:shadow-[0_20px_70px_-15px_rgba(139,92,246,0.4)]',
+  'cursor-pointer text-inherit hover:text-inherit hover:-translate-y-2 hover:border-violet-500/30 hover:bg-gradient-to-br hover:from-white/[0.08] hover:to-white/[0.04] hover:ring-violet-500/50 hover:ring-offset-gray-950 hover:shadow-[0_20px_70px_-15px_rgba(139,92,246,0.4)]',
   'focus:outline-hidden focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950',
 ].join(' ')
 
@@ -45,7 +45,7 @@ export const HeroCard = React.memo(({
         aria-disabled={disabled}
       >
         <span
-          className='flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] text-2xl'
+          className='flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] text-xl sm:text-2xl'
           aria-label={typeof icon === 'string' ? icon : undefined}
           aria-hidden={typeof icon !== 'string'}
         >
@@ -76,7 +76,7 @@ export const HeroCard = React.memo(({
         ].join(' ')}
       >
         <span
-          className='flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] text-2xl'
+          className='flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] text-xl sm:text-2xl'
           aria-label={typeof icon === 'string' ? icon : undefined}
           aria-hidden={typeof icon !== 'string'}
         >
@@ -101,7 +101,7 @@ export const HeroCard = React.memo(({
       aria-disabled={disabled}
     >
       <div
-        className='flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] text-2xl'
+        className='flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] text-xl sm:text-2xl'
         aria-hidden
       >
         {icon}
