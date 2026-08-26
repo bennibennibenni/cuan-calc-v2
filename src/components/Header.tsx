@@ -5,13 +5,44 @@ export interface HeaderProps extends React.HTMLAttributes<HTMLElement> {
   readonly className?: string;
 }
 
-const HeroIllustration = () => (
-  <img
-    src={heroImage}
-    alt='Cuan calculator hero illustration'
-    className='h-auto w-full max-w-[680px] drop-shadow-[0_30px_80px_rgba(124,58,237,0.35)]'
-  />
-)
+const HeroIllustration = () => {
+  const [isLoaded, setIsLoaded] = React.useState(false);
+
+  return (
+    <div className='relative w-full aspect-[3/2] flex items-center justify-center'>
+      {/* Skeleton Placeholder */}
+      {!isLoaded && (
+        <div
+          className='absolute inset-0 w-full h-full rounded-3xl border border-white/10 bg-white/[0.03] backdrop-blur-md overflow-hidden animate-pulse flex flex-col items-center justify-center gap-3 p-6 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.8)]'
+          aria-label='Loading illustration'
+          role='status'
+        >
+          <div className='absolute inset-0 bg-gradient-to-r from-transparent via-violet-500/10 to-transparent animate-shimmer' />
+          <div className='flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.05] text-2xl sm:text-3xl shadow-inner'>
+            📈
+          </div>
+          <div className='h-3 w-28 sm:w-32 rounded-full bg-white/10' />
+          <div className='h-2 w-16 sm:w-20 rounded-full bg-white/5' />
+        </div>
+      )}
+
+      {/* Hero Image with high fetch priority and smooth fade-in */}
+      <img
+        src={heroImage}
+        alt='Cuan calculator hero illustration'
+        width={1536}
+        height={1024}
+        loading='eager'
+        fetchPriority='high'
+        decoding='async'
+        onLoad={() => setIsLoaded(true)}
+        className={`h-auto w-full max-w-[680px] drop-shadow-[0_30px_80px_rgba(124,58,237,0.35)] transition-opacity duration-500 ease-out ${
+          isLoaded ? 'opacity-100' : 'opacity-0'
+        }`}
+      />
+    </div>
+  );
+};
 
 export const Header = React.forwardRef<HTMLElement, HeaderProps>(
   ({ className = '', ...props }, ref) => (
