@@ -19,7 +19,7 @@ const HeroIllustration = () => {
   return (
     <div className='relative w-full aspect-[3/2] flex items-center justify-center'>
       {/* Borderless Image Skeleton Loading Placeholder */}
-      {isLoaded && (
+      {!isLoaded && (
         <div
           className='absolute inset-0 w-full h-full rounded-3xl bg-white/[0.03] backdrop-blur-md overflow-hidden animate-pulse'
           aria-label='Loading hero image'
