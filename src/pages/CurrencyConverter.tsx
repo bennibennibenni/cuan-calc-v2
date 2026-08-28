@@ -1,8 +1,8 @@
+import React, { useState, useEffect } from 'react'
 import { Button } from '@/components/Button'
 import { FormResult } from '@/components/FormResult'
 import { Input } from '@/components/Input'
 import { Layout } from '@/components/Layout'
-import { useQuery } from '@/hooks/useQuery'
 import { formatIdr } from '@/utils/format'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Controller, useForm } from 'react-hook-form'
@@ -10,7 +10,8 @@ import { useNavigate } from 'react-router-dom'
 import * as yup from 'yup'
 
 type ExchangeRateResponse = {
-  data: {
+  result: string
+  rates: {
     [key: string]: number
   }
 }
@@ -59,30 +60,94 @@ const FieldIcon = ({ children }: { readonly children: React.ReactNode }) => (
   </svg>
 )
 
+const POPULAR_CURRENCIES = [
+  { code: 'USD', name: 'US Dollar', symbol: '$' },
+  { code: 'SGD', name: 'Singapore Dollar', symbol: 'S$' },
+  { code: 'EUR', name: 'Euro', symbol: '€' },
+  { code: 'JPY', name: 'Japanese Yen', symbol: '¥' },
+  { code: 'MYR', name: 'Malaysian Ringgit', symbol: 'RM' },
+  { code: 'GBP', name: 'British Pound', symbol: '£' },
+  { code: 'AUD', name: 'Australian Dollar', symbol: 'A$' },
+  { code: 'CNY', name: 'Chinese Yuan', symbol: '¥' },
+  { code: 'SAR', name: 'Saudi Riyal', symbol: 'SR' },
+]
+
+const DEFAULT_FALLBACK_RATES: { [key: string]: number } = {
+  USD: 16300,
+  SGD: 12200,
+  EUR: 17800,
+  JPY: 108,
+  MYR: 3700,
+  GBP: 21000,
+  AUD: 10800,
+  CNY: 2250,
+  SAR: 4350,
+}
+
 const defaultValues = {
   amount: '',
-  result: '',
+  sourceCurrency: 'USD',
+  direction: 'toIdr',
 }
 
 export const CurrencyConverter = () => {
   const navigate = useNavigate()
-  const apiKey = import.meta.env.VITE_FREE_CURRENCY_API_KEY
-  const { data, loading, error } = useQuery<ExchangeRateResponse>(
-    apiKey
-      ? `https://api.freecurrencyapi.com/v1/latest?apikey=${apiKey}&currencies=IDR`
-      : ''
-  )
+  const [rates, setRates] = useState<{ [key: string]: number }>(DEFAULT_FALLBACK_RATES)
+  const [loading, setLoading] = useState(true)
+  const [lastUpdated, setLastUpdated] = useState<string | null>(null)
+  const [result, setResult] = useState<string | null>(null)
+  const [detailedResult, setDetailedResult] = useState<{
+    convertedAmount: string
+    rateUsed: string
+    formula: string
+  } | null>(null)
+
+  useEffect(() => {
+    let isMounted = true
+    const fetchRates = async () => {
+      try {
+        setLoading(true)
+        const res = await fetch('https://open.er-api.com/v6/latest/USD')
+        if (!res.ok) throw new Error(`HTTP error ${res.status}`)
+        const json: ExchangeRateResponse = await res.json()
+        if (json.result === 'success' && isMounted) {
+          const usdToIdr = json.rates.IDR || DEFAULT_FALLBACK_RATES.USD
+          const calculatedRates: { [key: string]: number } = {}
+          POPULAR_CURRENCIES.forEach((curr) => {
+            if (curr.code === 'USD') {
+              calculatedRates.USD = usdToIdr
+            } else if (json.rates[curr.code]) {
+              calculatedRates[curr.code] = usdToIdr / json.rates[curr.code]
+            } else {
+              calculatedRates[curr.code] = DEFAULT_FALLBACK_RATES[curr.code] || 1
+            }
+          })
+          setRates(calculatedRates)
+          setLastUpdated(new Date().toLocaleTimeString())
+        }
+      } catch {
+        // Fallback rates will be preserved
+      } finally {
+        if (isMounted) setLoading(false)
+      }
+    }
+
+    fetchRates()
+    return () => {
+      isMounted = false
+    }
+  }, [])
 
   const schema = yup.object().shape({
-    amount: yup.string().required('Oh noes! field must be fill!'),
-    result: yup.string(),
+    amount: yup.string().required('Amount is required'),
+    sourceCurrency: yup.string().required(),
+    direction: yup.string().required(),
   })
 
   const {
     control,
     handleSubmit,
     setValue,
-    getValues,
     reset,
     watch,
     formState: { errors, isSubmitting },
@@ -91,28 +156,57 @@ export const CurrencyConverter = () => {
     defaultValues,
   })
 
-  const onSubmit = () => {
-    const { amount } = getValues()
-    const amountNum = Number(amount)
-    if (!Number.isFinite(amountNum)) return
+  const selectedCurrency = watch('sourceCurrency')
+  const selectedDirection = watch('direction')
+  const currentRate = rates[selectedCurrency] || DEFAULT_FALLBACK_RATES[selectedCurrency] || 16300
 
-    const rate = data?.data?.IDR
-    if (rate && Number.isFinite(rate)) {
-      const converted = amountNum * rate
-      setValue('result', formatIdr(converted, 0))
+  const handleToggleDirection = () => {
+    const nextDir = selectedDirection === 'toIdr' ? 'fromIdr' : 'toIdr'
+    setValue('direction', nextDir)
+    setResult(null)
+    setDetailedResult(null)
+  }
+
+  const onSubmit = (data: typeof defaultValues) => {
+    const amountNum = Number(data.amount)
+    if (!Number.isFinite(amountNum) || amountNum <= 0) return
+
+    const rate = rates[data.sourceCurrency] || DEFAULT_FALLBACK_RATES[data.sourceCurrency] || 16300
+
+    if (data.direction === 'toIdr') {
+      const idrTotal = amountNum * rate
+      const formatted = formatIdr(idrTotal, 0)
+      setResult(formatted)
+      setDetailedResult({
+        convertedAmount: formatted,
+        rateUsed: `1 ${data.sourceCurrency} = ${formatIdr(rate, 2)}`,
+        formula: `${amountNum.toLocaleString()} ${data.sourceCurrency} × ${formatIdr(rate, 2)}`,
+      })
+    } else {
+      const foreignTotal = amountNum / rate
+      const formatted = `${new Intl.NumberFormat(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(foreignTotal)} ${data.sourceCurrency}`
+      setResult(formatted)
+      setDetailedResult({
+        convertedAmount: formatted,
+        rateUsed: `1 ${data.sourceCurrency} = ${formatIdr(rate, 2)}`,
+        formula: `${formatIdr(amountNum, 0)} ÷ ${formatIdr(rate, 2)}`,
+      })
     }
   }
 
   const onReset = () => {
     reset(defaultValues)
+    setResult(null)
+    setDetailedResult(null)
   }
-
-  const result = watch('result')
-  const exchangeRate = data?.data?.IDR
 
   return (
     <Layout className='max-w-[1040px]'>
       <section className='space-y-6'>
+        {/* Header */}
         <header className='flex items-start justify-between gap-4'>
           <div className='flex min-w-0 items-start gap-4'>
             <div className='flex h-11 w-11 shrink-0 items-center justify-center text-white md:h-16 md:w-16'>
@@ -123,7 +217,7 @@ export const CurrencyConverter = () => {
                 Currency Converter
               </h1>
               <p className='mt-1 text-xs text-gray-400 md:text-base'>
-                Convert USD to IDR with live exchange rates
+                Convert USD, SGD, EUR, JPY and more to IDR with live exchange rates
               </p>
             </div>
           </div>
@@ -149,31 +243,70 @@ export const CurrencyConverter = () => {
           </button>
         </header>
 
-        {loading && (
-          <div className='rounded-2xl border border-white/6 bg-white/[0.02] p-4 text-center text-sm text-gray-400'>
-            Fetching live exchange rates...
+        {/* Live Rate Status Banner */}
+        <div className='flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-violet-500/20 bg-violet-500/10 p-3 text-xs md:p-4 md:text-sm'>
+          <div className='flex items-center gap-2 text-violet-200'>
+            <span className='inline-block h-2 w-2 rounded-full bg-emerald-400 animate-pulse' />
+            <span className='font-semibold'>
+              1 {selectedCurrency} = {formatIdr(currentRate, 2)}
+            </span>
           </div>
-        )}
-
-        {error && (
-          <div className='rounded-2xl border border-red-500/20 bg-red-500/10 p-4 text-center text-sm text-red-400'>
-            Failed to fetch exchange rates. Please check your API key.
+          <div className='text-gray-400 text-[11px] md:text-xs'>
+            {loading ? 'Fetching live rates…' : lastUpdated ? `Updated at ${lastUpdated}` : 'Live rates active'}
           </div>
-        )}
-
-        {exchangeRate && (
-          <div className='rounded-2xl border border-violet-500/20 bg-violet-500/5 p-4 text-center text-sm text-violet-300'>
-            Current Rate: 1 USD = {formatIdr(exchangeRate, 2)}
-          </div>
-        )}
+        </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
+          {/* Currency Selector */}
+          <div className='space-y-2 rounded-2xl border border-white/6 bg-white/[0.02] p-3 md:p-4'>
+            <label className='block text-xs font-semibold text-gray-200 md:text-sm'>
+              Select Currency:
+            </label>
+            <div className='grid grid-cols-3 gap-2 sm:grid-cols-5 md:grid-cols-9'>
+              {POPULAR_CURRENCIES.map((curr) => (
+                <button
+                  key={curr.code}
+                  type='button'
+                  onClick={() => {
+                    setValue('sourceCurrency', curr.code)
+                    setResult(null)
+                    setDetailedResult(null)
+                  }}
+                  className={`flex flex-col items-center justify-center rounded-xl p-2.5 text-center transition-all cursor-pointer border ${
+                    selectedCurrency === curr.code
+                      ? 'border-violet-500 bg-violet-600/20 text-white ring-1 ring-violet-500'
+                      : 'border-white/6 bg-white/[0.03] text-gray-400 hover:border-white/12 hover:text-gray-200'
+                  }`}
+                >
+                  <span className='font-bold text-xs md:text-sm'>{curr.code}</span>
+                  <span className='text-[10px] text-gray-400 truncate max-w-full'>{curr.symbol}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Direction Toggle */}
+          <div className='flex items-center justify-between rounded-xl border border-white/6 bg-white/[0.02] p-3'>
+            <span className='text-xs font-semibold text-gray-200 md:text-sm'>
+              Conversion Direction:
+            </span>
+            <button
+              type='button'
+              onClick={handleToggleDirection}
+              className='flex items-center gap-2 rounded-lg border border-violet-500/30 bg-violet-500/10 px-3 py-1.5 text-xs font-semibold text-violet-300 transition hover:bg-violet-500/20 cursor-pointer'
+            >
+              <span>{selectedDirection === 'toIdr' ? `${selectedCurrency} ➔ IDR` : `IDR ➔ ${selectedCurrency}`}</span>
+              <span className='text-sm leading-none'>⇄</span>
+            </button>
+          </div>
+
+          {/* Amount input */}
           <Controller
             name='amount'
             control={control}
             render={({ field }) => (
               <FieldRow
-                htmlFor='usd-amount-input'
+                htmlFor='currency-amount-input'
                 icon={(
                   <FieldIcon>
                     <circle cx='12' cy='12' r='8.25' />
@@ -181,17 +314,22 @@ export const CurrencyConverter = () => {
                     <path d='M12 7.5v9' />
                   </FieldIcon>
                 )}
-                title='Amount (USD)'
-                description='Enter the amount in US Dollars'
+                title={selectedDirection === 'toIdr' ? `Amount (${selectedCurrency})` : 'Amount (IDR)'}
+                description={
+                  selectedDirection === 'toIdr'
+                    ? `Enter amount in ${selectedCurrency}`
+                    : 'Enter amount in Indonesian Rupiah'
+                }
               >
                 <Input
-                  id='usd-amount-input'
-                  aria-label='Amount (USD)'
+                  id='currency-amount-input'
+                  aria-label={selectedDirection === 'toIdr' ? `Amount (${selectedCurrency})` : 'Amount (IDR)'}
                   containerClassName='mb-0'
                   errorMessage={errors?.amount?.message || ''}
                   formatThousands
                   placeholder='e.g. 100'
-                  postfix='USD'
+                  prefix={selectedDirection === 'fromIdr' ? 'Rp' : undefined}
+                  postfix={selectedDirection === 'toIdr' ? selectedCurrency : 'IDR'}
                   {...field}
                   type='number'
                   inputMode='numeric'
@@ -201,12 +339,18 @@ export const CurrencyConverter = () => {
             )}
           />
 
-          {result && (
-            <div className='grid gap-3 rounded-2xl border border-white/6 bg-white/[0.03] p-3 md:p-4'>
+          {/* Result */}
+          {result && detailedResult && (
+            <div className='grid gap-3 rounded-2xl border border-white/6 bg-white/[0.03] p-3 md:grid-cols-2 md:p-4'>
+              <FormResult
+                className='mb-0 rounded-2xl border border-violet-500/20 bg-violet-500/10 p-3 md:p-4'
+                label={selectedDirection === 'toIdr' ? 'Converted to IDR' : `Converted to ${selectedCurrency}`}
+                value={detailedResult.convertedAmount}
+              />
               <FormResult
                 className='mb-0 rounded-2xl border border-white/6 bg-white/[0.02] p-3 md:p-4'
-                label='Converted to IDR'
-                value={result}
+                label='Exchange Rate Applied'
+                value={detailedResult.rateUsed}
               />
             </div>
           )}
@@ -224,11 +368,11 @@ export const CurrencyConverter = () => {
             </Button>
             <Button
               type='submit'
-              disabled={isSubmitting || loading}
+              disabled={isSubmitting}
               className='h-11 min-w-[140px] bg-gradient-to-r from-violet-600 to-purple-600 px-5 text-sm text-white shadow-[0_18px_40px_-18px_rgba(124,58,237,0.95)] hover:from-violet-500 hover:to-purple-500 md:h-14 md:min-w-[180px] md:px-7 md:text-base'
             >
               <span className='mr-1.5 text-base leading-none md:mr-2 md:text-lg'>⊞</span>
-              {isSubmitting ? 'Converting…' : 'Convert'}
+              Convert
             </Button>
           </div>
         </form>

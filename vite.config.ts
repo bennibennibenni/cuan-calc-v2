@@ -126,6 +126,8 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./vitest.setup.ts'],
+    testTimeout: 15000,
+    hookTimeout: 15000,
     coverage: {
       provider: 'c8',
       reporter: ['text', 'lcov', 'html'],

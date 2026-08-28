@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 
 /**
  * StockInvestment page provides tools for stock trading calculations.
- * Includes navigation to profit/loss, TP/SL, dividends, and risk management tools.
+ * Includes navigation to profit/loss, TP/SL, dividends, risk management, compound interest, average down, and broker fee tools.
  *
  * @component
  * @returns {JSX.Element}
@@ -36,6 +36,22 @@ export const StockInvestment = () => {
         className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-4 sm:px-6 md:px-12 max-w-[1200px] mx-auto mb-16'
         aria-label='Stock investment tools'
       >
+        <HeroCard
+          title='Average Down & DCA'
+          desc='Calculate new average purchase price across multiple entries or simulate lots needed for a target average.'
+          icon='📉'
+          onClick={() => {
+            navigate('/stock-investment/average-down')
+          }}
+        />
+        <HeroCard
+          title='Broker Fee & Net Cuan'
+          desc='Calculate clean net profit and break-even selling price after brokerage commissions and sales taxes.'
+          icon='🧾'
+          onClick={() => {
+            navigate('/stock-investment/broker-fee')
+          }}
+        />
         <HeroCard
           title='Profit and loss'
           desc='Calculate the potential profit or loss of a trade or investment.'

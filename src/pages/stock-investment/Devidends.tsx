@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { Button } from '@/components/Button'
 import { FormResult } from '@/components/FormResult'
 import { Input } from '@/components/Input'
@@ -17,10 +18,10 @@ const defaultValues = {
 }
 
 type FieldRowProps = {
-  readonly icon: React.ReactNode
+  readonly icon: ReactNode
   readonly title: string
   readonly description: string
-  readonly children: React.ReactNode
+  readonly children: ReactNode
   readonly htmlFor?: string
 }
 
@@ -60,12 +61,12 @@ export const Devidends = () => {
     devidendTax: yup.string(),
     finalDevidend: yup.string(),
   })
+  type DevidendsFormData = yup.InferType<typeof schema>
 
   const {
     control,
     reset,
     setValue,
-    getValues,
     watch,
     handleSubmit,
     formState: { errors, isSubmitting },
@@ -78,11 +79,10 @@ export const Devidends = () => {
     reset(defaultValues)
   }
 
-  const onSubmit = async () => {
-    const { lot, dps, tax } = getValues()
-    const lotNumber = Number(lot)
-    const dpsNumber = Number(dps)
-    const taxNumber = Number(tax)
+  const onSubmit = (data: DevidendsFormData) => {
+    const lotNumber = Number(data.lot)
+    const dpsNumber = Number(data.dps)
+    const taxNumber = Number(data.tax)
     if (!Number.isFinite(lotNumber) || !Number.isFinite(dpsNumber) || !Number.isFinite(taxNumber)) {
       setValue('devidendTax', '')
       setValue('finalDevidend', '')

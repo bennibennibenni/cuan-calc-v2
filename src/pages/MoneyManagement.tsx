@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 /**
  * MoneyManagement page provides tools for managing personal finances.
- * Includes navigation to deposit, cashback, and retirement calculators.
+ * Includes navigation to deposit, cashback, retirement, emergency fund, and loan calculators.
  *
  * @component
  * @returns {JSX.Element}
@@ -36,6 +36,22 @@ export const MoneyManagement = () => {
         className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-4 sm:px-6 md:px-12 max-w-[1200px] mx-auto mb-16'
         aria-label='Money management tools'
       >
+        <HeroCard
+          title='Emergency Fund (Dana Darurat)'
+          desc='Calculate your recommended financial safety net and track your progress based on your lifestyle.'
+          icon='🛡️'
+          onClick={() => {
+            navigate('/money-management/emergency-fund');
+          }}
+        />
+        <HeroCard
+          title='Loan & KPR'
+          desc='Calculate monthly installments, total interest, and property costs for home or vehicle loans.'
+          icon='🏠'
+          onClick={() => {
+            navigate('/money-management/loan-calculator');
+          }}
+        />
         <HeroCard
           title='Deposit'
           desc='Calculate returns on fixed deposits based on interest rates and tenure.'

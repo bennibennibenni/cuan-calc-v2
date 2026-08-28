@@ -59,7 +59,6 @@ export const Ratios = () => {
     control,
     handleSubmit,
     setValue,
-    getValues,
     reset,
     watch,
     formState: { errors, isSubmitting },
@@ -67,17 +66,16 @@ export const Ratios = () => {
     defaultValues,
   })
 
-  const onSubmit = () => {
-    const { value1, value2, value3, value4 } = getValues()
-    const a = Number(value1)
-    const b = Number(value2)
-    const c = Number(value3)
-    const d = Number(value4)
+  const onSubmit = (data: typeof defaultValues) => {
+    const a = Number(data.value1)
+    const b = Number(data.value2)
+    const c = Number(data.value3)
+    const d = Number(data.value4)
 
-    const hasA = value1 !== '' && !Number.isNaN(a)
-    const hasB = value2 !== '' && !Number.isNaN(b)
-    const hasC = value3 !== '' && !Number.isNaN(c)
-    const hasD = value4 !== '' && !Number.isNaN(d)
+    const hasA = data.value1 !== '' && !Number.isNaN(a)
+    const hasB = data.value2 !== '' && !Number.isNaN(b)
+    const hasC = data.value3 !== '' && !Number.isNaN(c)
+    const hasD = data.value4 !== '' && !Number.isNaN(d)
 
     // Formula: a / b = c / d  =>  a * d = b * c
     let calculated = ''
