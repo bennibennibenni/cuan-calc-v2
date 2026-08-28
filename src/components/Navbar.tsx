@@ -21,15 +21,15 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
           className='group flex items-center gap-2.5 rounded-xl outline-hidden transition hover:opacity-95 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:ring-visible:ring-offset-gray-900'
           aria-label='Cuan calculator – go to home'
         >
-          <span className='relative flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-violet-500/30 bg-[#15131f] p-px shadow-[0_0_20px_rgba(167,139,250,0.3)] transition duration-300 group-hover:shadow-[0_0_26px_rgba(217,70,239,0.45)] sm:h-9 sm:w-9'>
-            <span className='flex h-full w-full items-center justify-center rounded-[7px] bg-[#15131f]'>
-              <img
-                src='/favicon.svg'
-                alt=''
-                className='h-5 w-5 object-cover sm:h-6 sm:w-6'
-              />
-            </span>
+          <span className='relative flex h-11 w-11 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-xl border border-violet-500/30 bg-[#15131f] overflow-hidden shadow-[0_0_20px_rgba(167,139,250,0.3)] transition duration-300 group-hover:shadow-[0_0_26px_rgba(217,70,239,0.45)]'>
+          <span className='relative flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-lg sm:rounded-xl border border-violet-500/30 bg-[#15131f] overflow-hidden shadow-[0_0_20px_rgba(167,139,250,0.3)] transition duration-300 group-hover:shadow-[0_0_26px_rgba(217,70,239,0.45)]'>
+            <img
+              src='/favicon.svg'
+              alt=''
+              className='h-full w-full object-cover'
+            />
           </span>
+          <span className='font-subheading-sm text-gray-100 md:font-subheading-md text-base sm:text-lg'>
           <span className='font-subheading-sm text-gray-100 md:font-subheading-md'>
             Cuan calculator
           </span>
