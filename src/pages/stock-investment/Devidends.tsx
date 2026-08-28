@@ -21,16 +21,23 @@ type FieldRowProps = {
   readonly title: string
   readonly description: string
   readonly children: React.ReactNode
+  readonly htmlFor?: string
 }
 
-const FieldRow = ({ icon, title, description, children }: FieldRowProps) => (
+const FieldRow = ({ icon, title, description, children, htmlFor }: FieldRowProps) => (
   <div className='grid gap-3 rounded-xl border border-white/6 bg-white/[0.03] p-3 md:grid-cols-[minmax(0,1fr)_minmax(280px,520px)] md:items-center md:gap-6 md:p-4'>
     <div className='flex items-start gap-2.5 md:gap-4'>
       <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white/6 text-gray-100 ring-1 ring-white/8 md:h-12 md:w-12'>
         {icon}
       </div>
       <div className='min-w-0'>
-        <p className='text-xs font-semibold text-gray-100 md:font-subheading-sm'>{title}</p>
+        {htmlFor ? (
+          <label htmlFor={htmlFor} className='text-xs font-semibold text-gray-100 md:font-subheading-sm cursor-pointer block'>
+            {title}
+          </label>
+        ) : (
+          <p className='text-xs font-semibold text-gray-100 md:font-subheading-sm'>{title}</p>
+        )}
         <p className='mt-0.5 text-xs leading-4 text-gray-400 md:mt-1 md:text-sm md:leading-5'>{description}</p>
       </div>
     </div>
@@ -81,8 +88,9 @@ export const Devidends = () => {
       setValue('finalDevidend', '')
       return
     }
-    const devidendTax = (taxNumber / 100) * (lotNumber * 100 * dpsNumber)
-    const finalDevidend = lotNumber * 100 * dpsNumber - taxNumber
+    const grossDividend = lotNumber * 100 * dpsNumber
+    const devidendTax = (taxNumber / 100) * grossDividend
+    const finalDevidend = grossDividend - devidendTax
     setValue('devidendTax', formatIdr(devidendTax, 0))
     setValue('finalDevidend', formatIdr(finalDevidend, 0))
   }
@@ -122,6 +130,7 @@ export const Devidends = () => {
             control={control}
             render={({ field }) => (
               <FieldRow
+                htmlFor='lot-input'
                 icon={(
                   <FieldIcon>
                     <rect x='3' y='3' width='7' height='7' rx='1' />
@@ -134,6 +143,8 @@ export const Devidends = () => {
                 description='Enter the number of lots you own'
               >
                 <Input
+                  id='lot-input'
+                  aria-label='Lot'
                   containerClassName='mb-0'
                   errorMessage={errors?.lot?.message || ''}
                   formatThousands
@@ -153,6 +164,7 @@ export const Devidends = () => {
             control={control}
             render={({ field }) => (
               <FieldRow
+                htmlFor='dps-input'
                 icon={(
                   <FieldIcon>
                     <circle cx='12' cy='12' r='8.25' />
@@ -164,6 +176,8 @@ export const Devidends = () => {
                 description='Enter the dividend per share amount'
               >
                 <Input
+                  id='dps-input'
+                  aria-label='DPS (Dividend Per Share)'
                   containerClassName='mb-0'
                   errorMessage={errors?.dps?.message || ''}
                   formatThousands
@@ -183,6 +197,7 @@ export const Devidends = () => {
             control={control}
             render={({ field }) => (
               <FieldRow
+                htmlFor='tax-input'
                 icon={(
                   <FieldIcon>
                     <circle cx='12' cy='12' r='8.25' />
@@ -194,6 +209,8 @@ export const Devidends = () => {
                 description='Enter the dividend tax rate'
               >
                 <Input
+                  id='tax-input'
+                  aria-label='Tax rate (%)'
                   containerClassName='mb-0'
                   errorMessage={errors?.tax?.message || ''}
                   formatThousands
@@ -252,3 +269,5 @@ export const Devidends = () => {
     </Layout>
   )
 }
+
+export default Devidends

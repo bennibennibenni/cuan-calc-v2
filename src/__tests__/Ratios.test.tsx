@@ -1,26 +1,27 @@
-import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import { render, screen, fireEvent } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
 import { Ratios } from '@/pages/Ratios'
 import { MemoryRouter } from 'react-router-dom'
 
 describe('Ratios page', () => {
-  it('computes missing ratio on blur when three inputs provided', async () => {
+  it('computes missing ratio when three inputs provided', async () => {
     render(
       <MemoryRouter>
         <Ratios />
       </MemoryRouter>
     )
-    const inputs = screen.getAllByRole('textbox')
-    // provide three values
-    await userEvent.type(inputs[0], '2')
-    inputs[0].blur()
-    await userEvent.type(inputs[1], '3')
-    inputs[1].blur()
-    await userEvent.type(inputs[2], '4')
-    inputs[2].blur()
+    const val1 = screen.getByLabelText('First value (a)') as HTMLInputElement
+    const val2 = screen.getByLabelText('Second value (b)') as HTMLInputElement
+    const val3 = screen.getByLabelText('Third value (c)') as HTMLInputElement
 
-    // one of the inputs should be filled by calculation
-    expect(inputs.some((i) => (i as HTMLInputElement).value !== '')).toBe(true)
+    fireEvent.change(val1, { target: { value: '2' } })
+    fireEvent.change(val2, { target: { value: '4' } })
+    fireEvent.change(val3, { target: { value: '3' } })
+
+    const calculateBtn = screen.getByRole('button', { name: /Calculate/i })
+    fireEvent.click(calculateBtn)
+
+    const result = await screen.findByText('6')
+    expect(result).toBeTruthy()
   })
 })

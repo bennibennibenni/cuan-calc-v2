@@ -6,14 +6,21 @@ import React, {
   useState,
 } from 'react';
 
-/** Format raw number string with dot thousands (e.g. 1000 → "1.000", 1000000 → "1.000.000") */
+/** Format raw number string with dot thousands (e.g. 1000 → "1.000", 1000.5 → "1.000,5") */
 function formatThousands(raw: string): string {
-  if (raw === '' || raw === ',') return raw
-  const [intPart = '', decPart = ''] = raw.split(',')
+  if (raw === '' || raw === ',' || raw === '.') return raw
+  const isComma = raw.includes(',')
+  const separator = isComma ? ',' : '.'
+  const [intPart = '', decPart] = raw.includes('.') && isComma
+    ? raw.split(',')
+    : raw.split(separator)
   const digitsOnly = intPart.replace(/\D/g, '')
   const withSeparator = digitsOnly.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
-  const decimal = decPart.replace(/\D/g, '')
-  return decimal ? `${withSeparator},${decimal}` : withSeparator
+  if (decPart !== undefined) {
+    const decimal = decPart.replace(/\D/g, '')
+    return `${withSeparator},${decimal}`
+  }
+  return withSeparator
 }
 
 /** Parse displayed value back to raw number string for form state */
@@ -28,8 +35,8 @@ function toRawInput(value: string): string {
   if (parts.length > 2)
     return toRawInput(parts[0] + ',' + parts.slice(1).join(''))
   const intPart = (parts[0] ?? '').replace(/\D/g, '')
-  const decPart = (parts[1] ?? '').replace(/\D/g, '')
-  if (decPart === '') return intPart
+  const decPart = parts[1] !== undefined ? parts[1].replace(/\D/g, '') : undefined
+  if (decPart === undefined) return intPart
   return `${intPart}.${decPart}`
 }
 
@@ -181,7 +188,6 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <label
             htmlFor={id}
             className='block mb-2 font-subheading-sm text-gray-100'
-            aria-label={label}
           >
             {label}
           </label>

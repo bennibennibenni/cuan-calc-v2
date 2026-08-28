@@ -1,25 +1,25 @@
-import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import { render, screen, fireEvent } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
 import { TpSl } from '@/pages/stock-investment/TpSl'
 import { MemoryRouter } from 'react-router-dom'
 
 describe('TpSl page', () => {
-  it('shows formatted Rp results on blur', async () => {
+  it('calculates price after increase and shows formatted result', async () => {
     render(
       <MemoryRouter>
         <TpSl />
       </MemoryRouter>
     )
-    const inc = screen.getByLabelText('Increase') as HTMLInputElement
-    const of = (screen.getAllByLabelText('of') as HTMLInputElement[])[0]
+    const inc = screen.getByLabelText('Increase (%)') as HTMLInputElement
+    const base = screen.getByLabelText('Base price (Increase)') as HTMLInputElement
 
-    await userEvent.type(inc, '10')
-    inc.blur()
-    await userEvent.type(of, '10000')
-    of.blur()
+    fireEvent.change(inc, { target: { value: '10' } })
+    fireEvent.change(base, { target: { value: '10000' } })
 
-    const results = await screen.findAllByText(/Rp/)
-    expect(results.length).toBeGreaterThanOrEqual(1)
+    const calculateBtns = screen.getAllByRole('button', { name: /Calculate/i })
+    fireEvent.click(calculateBtns[0])
+
+    const result = await screen.findByText(/Rp 11\.000/)
+    expect(result).toBeTruthy()
   })
 })

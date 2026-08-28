@@ -10,7 +10,7 @@ import * as yup from 'yup'
 
 const defaultValues = {
   cashbackPercentage: '',
-  maxCashback: '',
+  maximumCashback: '',
   result: '',
 }
 
@@ -19,16 +19,23 @@ type FieldRowProps = {
   readonly title: string
   readonly description: string
   readonly children: React.ReactNode
+  readonly htmlFor?: string
 }
 
-const FieldRow = ({ icon, title, description, children }: FieldRowProps) => (
+const FieldRow = ({ icon, title, description, children, htmlFor }: FieldRowProps) => (
   <div className='grid gap-3 rounded-xl border border-white/6 bg-white/[0.03] p-3 md:grid-cols-[minmax(0,1fr)_minmax(280px,520px)] md:items-center md:gap-6 md:p-4'>
     <div className='flex items-start gap-2.5 md:gap-4'>
       <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white/6 text-gray-100 ring-1 ring-white/8 md:h-12 md:w-12'>
         {icon}
       </div>
       <div className='min-w-0'>
-        <p className='text-xs font-semibold text-gray-100 md:font-subheading-sm'>{title}</p>
+        {htmlFor ? (
+          <label htmlFor={htmlFor} className='text-xs font-semibold text-gray-100 md:font-subheading-sm cursor-pointer block'>
+            {title}
+          </label>
+        ) : (
+          <p className='text-xs font-semibold text-gray-100 md:font-subheading-sm'>{title}</p>
+        )}
         <p className='mt-0.5 text-xs leading-4 text-gray-400 md:mt-1 md:text-sm md:leading-5'>{description}</p>
       </div>
     </div>
@@ -46,17 +53,17 @@ export const CashbackReward = () => {
   const navigate = useNavigate()
   const schema = yup.object().shape({
     cashbackPercentage: yup.string().required('Oh noes! field must be fill!'),
-    maxCashback: yup.string().required('Oh noes! field must be fill!'),
+    maximumCashback: yup.string().required('Oh noes! field must be fill!'),
     result: yup.string(),
   })
 
   const {
     control,
+    reset,
     setValue,
     getValues,
-    handleSubmit,
     watch,
-    reset,
+    handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: yupResolver(schema),
@@ -64,16 +71,12 @@ export const CashbackReward = () => {
   })
 
   const onSubmit = async () => {
-    const { cashbackPercentage, maxCashback } = getValues()
-    const parseCashbackPercentagetToNumber = Number(cashbackPercentage)
-    const parseMaxCashbackToNumber = Number(maxCashback)
-    if (!Number.isFinite(parseCashbackPercentagetToNumber) || !Number.isFinite(parseMaxCashbackToNumber)) {
-      setValue('result', '')
-      return
-    }
-    const tempResult = parseCashbackPercentagetToNumber / 100
-    const tempResult2 = parseMaxCashbackToNumber / tempResult
-    setValue('result', formatIdr(tempResult2, 0))
+    const { cashbackPercentage, maximumCashback } = getValues()
+    const pct = Number(cashbackPercentage)
+    const max = Number(maximumCashback)
+    if (!Number.isFinite(pct) || !Number.isFinite(max) || pct === 0) return
+    const calculated = (100 / pct) * max
+    setValue('result', formatIdr(calculated, 0))
   }
 
   const onReset = () => {
@@ -92,14 +95,14 @@ export const CashbackReward = () => {
             </div>
             <div className='min-w-0'>
               <h1 className='font-heading-sm text-gray-100 md:font-heading-md md:text-[2rem]'>Cashback Reward</h1>
-              <p className='mt-1 text-xs text-gray-400 md:text-base'>Enter your details to calculate your cashback</p>
+              <p className='mt-1 text-xs text-gray-400 md:text-base'>Calculate optimal purchase amount to maximize cashback reward</p>
             </div>
           </div>
           <button
             type='button'
             onClick={() => navigate('/money-management')}
             className='flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/8 bg-white/[0.03] text-gray-300 transition hover:border-white/12 hover:bg-white/[0.06] hover:text-gray-100 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent cursor-pointer md:h-12 md:w-12'
-            aria-label='Close cashback reward calculator'
+            aria-label='Close cashback calculator'
           >
             <svg aria-hidden viewBox='0 0 24 24' className='h-5 w-5 md:h-6 md:w-6' fill='none' stroke='currentColor' strokeWidth={1.9} strokeLinecap='round' strokeLinejoin='round'>
               <path d='M6 6l12 12' />
@@ -114,17 +117,21 @@ export const CashbackReward = () => {
             control={control}
             render={({ field }) => (
               <FieldRow
+                htmlFor='cb-percentage-input'
                 icon={(
                   <FieldIcon>
                     <circle cx='12' cy='12' r='8.25' />
-                    <path d='M9.5 9.5c0-.92.84-1.67 2.5-1.67s2.5.75 2.5 1.67-.82 1.42-2.5 1.83-2.5.9-2.5 1.84.84 1.67 2.5 1.67 2.5-.75 2.5-1.67' />
-                    <path d='M12 7.5v9' />
+                    <path d='M8 8l8 8' />
+                    <circle cx='9' cy='9' r='1.5' />
+                    <circle cx='15' cy='15' r='1.5' />
                   </FieldIcon>
                 )}
                 title='Cashback percentage'
-                description='Enter the cashback percentage rate'
+                description='Enter the cashback percentage offer'
               >
                 <Input
+                  id='cb-percentage-input'
+                  aria-label='Cashback percentage'
                   containerClassName='mb-0'
                   errorMessage={errors?.cashbackPercentage?.message || ''}
                   formatThousands
@@ -140,26 +147,29 @@ export const CashbackReward = () => {
           />
 
           <Controller
-            name='maxCashback'
+            name='maximumCashback'
             control={control}
             render={({ field }) => (
               <FieldRow
+                htmlFor='cb-maximum-input'
                 icon={(
                   <FieldIcon>
-                    <path d='M4.5 8.5h15v7h-15z' />
-                    <path d='M7 8.5V6.75A1.75 1.75 0 0 1 8.75 5h6.5A1.75 1.75 0 0 1 17 6.75V8.5' />
-                    <path d='M7 13h2' />
+                    <circle cx='12' cy='12' r='8.25' />
+                    <path d='M9.5 9.5c0-.92.84-1.67 2.5-1.67s2.5.75 2.5 1.67-.82 1.42-2.5 1.83-2.5.9-2.5 1.84.84 1.67 2.5 1.67 2.5-.75 2.5-1.67' />
+                    <path d='M12 7.5v9' />
                   </FieldIcon>
                 )}
                 title='Maximum cashback'
-                description='Enter the maximum cashback amount'
+                description='Enter maximum cashback cap'
               >
                 <Input
+                  id='cb-maximum-input'
+                  aria-label='Maximum cashback'
                   containerClassName='mb-0'
-                  errorMessage={errors?.maxCashback?.message || ''}
+                  errorMessage={errors?.maximumCashback?.message || ''}
+                  prefix='Rp'
                   formatThousands
-                  placeholder='e.g. 50000'
-                  postfix='$'
+                  placeholder='e.g. 10000'
                   {...field}
                   type='number'
                   inputMode='numeric'
@@ -173,7 +183,7 @@ export const CashbackReward = () => {
             <div className='grid gap-3 rounded-2xl border border-white/6 bg-white/[0.03] p-3 md:p-4'>
               <FormResult
                 className='mb-0 rounded-2xl border border-white/6 bg-white/[0.02] p-3 md:p-4'
-                label='Minimum transaction amount'
+                label='Minimum Purchase Required'
                 value={result}
               />
             </div>
@@ -204,3 +214,5 @@ export const CashbackReward = () => {
     </Layout>
   )
 }
+
+export default CashbackReward

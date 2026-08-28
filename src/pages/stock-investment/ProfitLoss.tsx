@@ -12,16 +12,23 @@ type FieldRowProps = {
   readonly title: string
   readonly description: string
   readonly children: React.ReactNode
+  readonly htmlFor?: string
 }
 
-const FieldRow = ({ icon, title, description, children }: FieldRowProps) => (
+const FieldRow = ({ icon, title, description, children, htmlFor }: FieldRowProps) => (
   <div className='grid gap-3 rounded-xl border border-white/6 bg-white/[0.03] p-3 md:grid-cols-[minmax(0,1fr)_minmax(280px,520px)] md:items-center md:gap-6 md:p-4'>
     <div className='flex items-start gap-2.5 md:gap-4'>
       <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white/6 text-gray-100 ring-1 ring-white/8 md:h-12 md:w-12'>
         {icon}
       </div>
       <div className='min-w-0'>
-        <p className='text-xs font-semibold text-gray-100 md:font-subheading-sm'>{title}</p>
+        {htmlFor ? (
+          <label htmlFor={htmlFor} className='text-xs font-semibold text-gray-100 md:font-subheading-sm cursor-pointer block'>
+            {title}
+          </label>
+        ) : (
+          <p className='text-xs font-semibold text-gray-100 md:font-subheading-sm'>{title}</p>
+        )}
         <p className='mt-0.5 text-xs leading-4 text-gray-400 md:mt-1 md:text-sm md:leading-5'>{description}</p>
       </div>
     </div>
@@ -127,6 +134,7 @@ export const ProfitLoss = () => {
             control={control}
             render={({ field }) => (
               <FieldRow
+                htmlFor='cost-price-input'
                 icon={(
                   <FieldIcon>
                     <path d='M4.5 8.5h15v7h-15z' />
@@ -138,6 +146,8 @@ export const ProfitLoss = () => {
                 description='Enter the original price'
               >
                 <Input
+                  id='cost-price-input'
+                  aria-label='Cost price'
                   containerClassName='mb-0'
                   errorMessage={errors?.price1?.message || ''}
                   formatThousands
@@ -157,6 +167,7 @@ export const ProfitLoss = () => {
             control={control}
             render={({ field }) => (
               <FieldRow
+                htmlFor='selling-price-input'
                 icon={(
                   <FieldIcon>
                     <path d='M4.5 8.5h15v7h-15z' />
@@ -168,6 +179,8 @@ export const ProfitLoss = () => {
                 description='Enter the selling price'
               >
                 <Input
+                  id='selling-price-input'
+                  aria-label='Selling price'
                   containerClassName='mb-0'
                   errorMessage={errors?.price2?.message || ''}
                   formatThousands
@@ -217,3 +230,5 @@ export const ProfitLoss = () => {
     </Layout>
   )
 }
+
+export default ProfitLoss
