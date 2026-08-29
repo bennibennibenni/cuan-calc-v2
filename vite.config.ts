@@ -17,7 +17,7 @@ export default defineConfig({
       includeAssets: ['favicon.svg', 'favicon.ico', 'robots.txt', 'icons/*'],
       manifest: {
         name: 'Cuan Calculator — Track and Forecast Your Gains',
-        short_name: 'Cuan Calc',
+        short_name: 'Cuan Calculator',
         description:
           'Track and forecast your gains with stock investment, money management, currency converter, and financial ratio tools.',
         theme_color: '#7c3aed',

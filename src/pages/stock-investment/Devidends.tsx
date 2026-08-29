@@ -55,9 +55,9 @@ const FieldIcon = ({ children }: { readonly children: React.ReactNode }) => (
 export const Devidends = () => {
   const navigate = useNavigate()
   const schema = yup.object().shape({
-    lot: yup.string().required('Oh noes! field must be fill!'),
-    dps: yup.string().required('Oh noes! field must be fill!'),
-    tax: yup.string().required('Oh noes! field must be fill!'),
+    lot: yup.string().required('This field is required'),
+    dps: yup.string().required('This field is required'),
+    tax: yup.string().required('This field is required'),
     devidendTax: yup.string(),
     finalDevidend: yup.string(),
   })
@@ -124,7 +124,7 @@ export const Devidends = () => {
           </button>
         </header>
 
-        <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
+        <form onSubmit={handleSubmit(onSubmit)} autoComplete='off' className='space-y-4'>
           <Controller
             name='lot'
             control={control}

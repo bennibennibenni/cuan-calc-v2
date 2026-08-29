@@ -50,10 +50,10 @@ const FieldIcon = ({ children }: { readonly children: React.ReactNode }) => (
 export const Deposit = () => {
   const navigate = useNavigate()
   const schema = yup.object().shape({
-    initialDeposit: yup.string().required('Oh noes! field must be fill!'),
-    tenureMonths: yup.string().required('Oh noes! field must be fill!'),
-    annualInterestRate: yup.string().required('Oh noes! field must be fill!'),
-    annualTaxRate: yup.string().required('Oh noes! field must be fill!'),
+    initialDeposit: yup.string().required('This field is required'),
+    tenureMonths: yup.string().required('This field is required'),
+    annualInterestRate: yup.string().required('This field is required'),
+    annualTaxRate: yup.string().required('This field is required'),
     net: yup.string(),
     gross: yup.string(),
     taxOnInterest: yup.string(),
@@ -137,7 +137,7 @@ export const Deposit = () => {
           </button>
         </header>
 
-        <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
+        <form onSubmit={handleSubmit(onSubmit)} autoComplete='off' className='space-y-4'>
           <Controller
             name='initialDeposit'
             control={control}

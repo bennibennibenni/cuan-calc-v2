@@ -127,7 +127,7 @@ export default function Retirement() {
           </button>
         </header>
 
-        <form onSubmit={handleSubmit(calculate)} className='space-y-4'>
+        <form onSubmit={handleSubmit(calculate)} autoComplete='off' className='space-y-4'>
           <Controller
             name='currentAge'
             control={control}

@@ -67,10 +67,10 @@ export const AverageDown = () => {
 
   // Standard Mode Form
   const standardSchema = yup.object().shape({
-    price1: yup.string().required('Price is required'),
-    lots1: yup.string().required('Lot count is required'),
-    price2: yup.string().required('Price is required'),
-    lots2: yup.string().required('Lot count is required'),
+    price1: yup.string().required('This field is required'),
+    lots1: yup.string().required('This field is required'),
+    price2: yup.string().required('This field is required'),
+    lots2: yup.string().required('This field is required'),
     price3: yup.string(),
     lots3: yup.string(),
   })
@@ -134,10 +134,10 @@ export const AverageDown = () => {
 
   // Target Mode Form
   const targetSchema = yup.object().shape({
-    initialPrice: yup.string().required('Initial price is required'),
-    initialLots: yup.string().required('Initial lots is required'),
-    currentPrice: yup.string().required('Current buy price is required'),
-    targetAveragePrice: yup.string().required('Target average is required'),
+    initialPrice: yup.string().required('This field is required'),
+    initialLots: yup.string().required('This field is required'),
+    currentPrice: yup.string().required('This field is required'),
+    targetAveragePrice: yup.string().required('This field is required'),
   })
   type TargetFormData = yup.InferType<typeof targetSchema>
 
@@ -286,10 +286,10 @@ export const AverageDown = () => {
 
         {/* Standard Mode */}
         {activeTab === 'standard' && (
-          <form onSubmit={handleStandardSubmit(onStandardSubmit)} className='space-y-4'>
+          <form onSubmit={handleStandardSubmit(onStandardSubmit)} autoComplete='off' className='space-y-4'>
             {/* Purchase 1 */}
             <div className='space-y-3 rounded-2xl border border-white/6 bg-white/[0.02] p-3 md:p-4'>
-              <h2 className='text-xs font-semibold text-violet-400 md:text-sm uppercase tracking-wider'>First Purchase (Initial)</h2>
+              <h2 className='text-sm font-semibold text-gray-100 md:font-subheading-md'>First Purchase (Initial)</h2>
               <Controller
                 name='price1'
                 control={standardControl}
@@ -359,7 +359,7 @@ export const AverageDown = () => {
 
             {/* Purchase 2 */}
             <div className='space-y-3 rounded-2xl border border-white/6 bg-white/[0.02] p-3 md:p-4'>
-              <h2 className='text-xs font-semibold text-fuchsia-400 md:text-sm uppercase tracking-wider'>Second Purchase (Average Down)</h2>
+              <h2 className='text-sm font-semibold text-gray-100 md:font-subheading-md'>Second Purchase (Average Down)</h2>
               <Controller
                 name='price2'
                 control={standardControl}
@@ -429,7 +429,7 @@ export const AverageDown = () => {
 
             {/* Purchase 3 (Optional) */}
             <div className='space-y-3 rounded-2xl border border-white/6 bg-white/[0.02] p-3 md:p-4'>
-              <h2 className='text-xs font-semibold text-gray-400 md:text-sm uppercase tracking-wider'>Third Purchase (Optional)</h2>
+              <h2 className='text-sm font-semibold text-gray-100 md:font-subheading-md'>Third Purchase (Optional)</h2>
               <Controller
                 name='price3'
                 control={standardControl}
@@ -544,7 +544,7 @@ export const AverageDown = () => {
 
         {/* Target Simulator Mode */}
         {activeTab === 'target' && (
-          <form onSubmit={handleTargetSubmit(onTargetSubmit)} className='space-y-4'>
+          <form onSubmit={handleTargetSubmit(onTargetSubmit)} autoComplete='off' className='space-y-4'>
             <Controller
               name='initialPrice'
               control={targetControl}

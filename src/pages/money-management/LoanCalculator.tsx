@@ -55,10 +55,10 @@ export const LoanCalculator = () => {
   const navigate = useNavigate()
 
   const schema = yup.object().shape({
-    propertyPrice: yup.string().required('Total loan / property price is required'),
-    downPaymentPercent: yup.string().required('Down payment is required'),
-    annualInterestRate: yup.string().required('Interest rate is required'),
-    tenureYears: yup.string().required('Loan tenure is required'),
+    propertyPrice: yup.string().required('This field is required'),
+    downPaymentPercent: yup.string().required('This field is required'),
+    annualInterestRate: yup.string().required('This field is required'),
+    tenureYears: yup.string().required('This field is required'),
   })
 
   const {
@@ -151,7 +151,7 @@ export const LoanCalculator = () => {
           </button>
         </header>
 
-        <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
+        <form onSubmit={handleSubmit(onSubmit)} autoComplete='off' className='space-y-4'>
           <Controller
             name='propertyPrice'
             control={control}

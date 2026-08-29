@@ -54,9 +54,9 @@ const FieldIcon = ({ children }: { readonly children: React.ReactNode }) => (
 export const RiskManagementPercentage = () => {
   const navigate = useNavigate()
   const schema = yup.object().shape({
-    marketPrice: yup.string().required('Oh noes! field must be fill!'),
-    takeProfitPercentage: yup.string().required('Oh noes! field must be fill!'),
-    stopLossPercentage: yup.string().required('Oh noes! field must be fill!'),
+    marketPrice: yup.string().required('This field is required'),
+    takeProfitPercentage: yup.string().required('This field is required'),
+    stopLossPercentage: yup.string().required('This field is required'),
     takeProfitResult: yup.string(),
     stopLossResult: yup.string(),
   })
@@ -122,7 +122,7 @@ export const RiskManagementPercentage = () => {
           </button>
         </header>
 
-        <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
+        <form onSubmit={handleSubmit(onSubmit)} autoComplete='off' className='space-y-4'>
           <Controller
             name='marketPrice'
             control={control}

@@ -55,7 +55,7 @@ export type InputProps = Omit<
 };
 
 const inputBaseClass =
-  'block w-full p-3 font-body-md text-gray-100 bg-white/[0.03] border border-gray-700/50 rounded-xl backdrop-blur-sm focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/50 focus:bg-white/[0.05] focus:shadow-lg focus:shadow-violet-500/10 hover:border-gray-600/70 hover:bg-white/[0.04] outline-hidden transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed placeholder:text-gray-500'
+  'block w-full p-3 font-body-md text-gray-100 bg-white/[0.03] border border-gray-700/50 rounded-xl backdrop-blur-sm focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/50 focus:bg-white/[0.05] focus:shadow-lg focus:shadow-violet-500/10 hover:border-gray-600/70 hover:bg-white/[0.04] outline-hidden transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed placeholder:text-gray-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none'
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({
@@ -69,11 +69,17 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     id: idProp,
     value: valueProp,
     type: typeProp,
+    style: styleProp,
     ...props
   }, ref) => {
     const generatedId = useId()
     const id = idProp ?? generatedId
     const inputRef = useRef<HTMLInputElement>(null)
+    const prefixRef = useRef<HTMLDivElement>(null)
+    const postfixRef = useRef<HTMLDivElement>(null)
+    const [prefixWidth, setPrefixWidth] = useState<number | undefined>()
+    const [postfixWidth, setPostfixWidth] = useState<number | undefined>()
+
     const [displayValue, setDisplayValue] = useState(() =>
       enableFormat && valueProp != null && valueProp !== ''
         ? formatThousands(String(valueProp))
@@ -81,6 +87,16 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     )
 
     useImperativeHandle(ref, () => inputRef.current!);
+
+    // Measure prefix and postfix width dynamically
+    useEffect(() => {
+      if (prefixRef.current) {
+        setPrefixWidth(prefixRef.current.offsetWidth + 14)
+      }
+      if (postfixRef.current) {
+        setPostfixWidth(postfixRef.current.offsetWidth + 14)
+      }
+    }, [prefix, postfix])
 
     // Keep internal displayValue in sync when controlled valueProp changes
     useEffect(() => {
@@ -150,8 +166,23 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       }
     }
 
+    // Compute safe fallback paddings based on affix content
+    const fallbackPrefixPadding = prefix ? 44 : undefined
+    const fallbackPostfixPadding = postfix
+      ? typeof postfix === 'string'
+        ? Math.max(48, postfix.length * 10 + 24)
+        : 56
+      : undefined
+
+    const computedPaddingLeft = prefix ? (prefixWidth ?? fallbackPrefixPadding) : undefined
+    const computedPaddingRight = postfix ? (postfixWidth ?? fallbackPostfixPadding) : undefined
+
     const inputElement = (
       <input
+        autoComplete='off'
+        autoCorrect='off'
+        autoCapitalize='off'
+        spellCheck={false}
         {...props}
         ref={inputRef}
         id={id}
@@ -159,21 +190,32 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         value={inputValue}
         onChange={handleChange}
         onBlur={handleBlur}
-        className={`${inputBaseClass} ${prefix ? 'ps-10' : ''} ${postfix ? 'pe-12' : ''} ${props.className ?? ''}`.trim()}
+        style={{
+          paddingLeft: computedPaddingLeft,
+          paddingRight: computedPaddingRight,
+          ...styleProp,
+        }}
+        className={`${inputBaseClass} ${props.className ?? ''}`.trim()}
       />
     );
 
     const hasAffix = prefix || postfix
     const wrappedInput = hasAffix ? (
-      <div className='relative'>
+      <div className='relative flex items-center'>
         {prefix && (
-          <div className='pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3.5 font-body-sm text-gray-500'>
+          <div
+            ref={prefixRef}
+            className='pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3.5 font-body-sm text-gray-400 select-none'
+          >
             {prefix}
           </div>
         )}
         {inputElement}
         {postfix && (
-          <div className='pointer-events-none absolute inset-y-0 end-0 flex items-center pe-3.5 font-body-sm text-gray-500'>
+          <div
+            ref={postfixRef}
+            className='pointer-events-none absolute inset-y-0 end-0 flex items-center pe-3.5 font-body-sm text-gray-400 select-none'
+          >
             {postfix}
           </div>
         )}

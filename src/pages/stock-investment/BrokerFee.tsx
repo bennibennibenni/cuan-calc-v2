@@ -56,11 +56,11 @@ export const BrokerFee = () => {
   const navigate = useNavigate()
 
   const schema = yup.object().shape({
-    buyPrice: yup.string().required('Buy price is required'),
-    sellPrice: yup.string().required('Sell price is required'),
-    lots: yup.string().required('Lot count is required'),
-    buyFeePercent: yup.string().required('Buy fee is required'),
-    sellFeePercent: yup.string().required('Sell fee is required'),
+    buyPrice: yup.string().required('This field is required'),
+    sellPrice: yup.string().required('This field is required'),
+    lots: yup.string().required('This field is required'),
+    buyFeePercent: yup.string().required('This field is required'),
+    sellFeePercent: yup.string().required('This field is required'),
   })
 
   const {

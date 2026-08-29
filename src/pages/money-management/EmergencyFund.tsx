@@ -57,9 +57,9 @@ export const EmergencyFund = () => {
   const navigate = useNavigate()
 
   const schema = yup.object().shape({
-    monthlyExpenses: yup.string().required('Monthly expenses is required'),
-    profile: yup.string().required(),
-    monthsTarget: yup.string().required('Target months is required'),
+    monthlyExpenses: yup.string().required('This field is required'),
+    profile: yup.string().required('This field is required'),
+    monthsTarget: yup.string().required('This field is required'),
     currentSavings: yup.string(),
     targetMonthsToSave: yup.string(),
   })
@@ -149,7 +149,7 @@ export const EmergencyFund = () => {
           </button>
         </header>
 
-        <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
+        <form onSubmit={handleSubmit(onSubmit)} autoComplete='off' className='space-y-4'>
           {/* Lifestyle / Profile Selector */}
           <div className='space-y-2 rounded-2xl border border-white/6 bg-white/[0.02] p-3 md:p-4'>
             <p className='text-xs font-semibold text-gray-200 md:text-sm'>Select your lifestyle status:</p>

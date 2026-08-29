@@ -139,9 +139,9 @@ export const CurrencyConverter = () => {
   }, [])
 
   const schema = yup.object().shape({
-    amount: yup.string().required('Amount is required'),
-    sourceCurrency: yup.string().required(),
-    direction: yup.string().required(),
+    amount: yup.string().required('This field is required'),
+    sourceCurrency: yup.string().required('This field is required'),
+    direction: yup.string().required('This field is required'),
   })
 
   const {
@@ -256,7 +256,7 @@ export const CurrencyConverter = () => {
           </div>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
+        <form onSubmit={handleSubmit(onSubmit)} autoComplete='off' className='space-y-4'>
           {/* Currency Selector */}
           <div className='space-y-2 rounded-2xl border border-white/6 bg-white/[0.02] p-3 md:p-4'>
             <label className='block text-xs font-semibold text-gray-200 md:text-sm'>

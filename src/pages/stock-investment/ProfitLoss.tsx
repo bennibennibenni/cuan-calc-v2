@@ -51,8 +51,8 @@ const defaultValues = {
 export const ProfitLoss = () => {
   const navigate = useNavigate()
   const schema = yup.object().shape({
-    price1: yup.string().required('Oh noes! field must be fill!'),
-    price2: yup.string().required('Oh noes! field must be fill!'),
+    price1: yup.string().required('This field is required'),
+    price2: yup.string().required('This field is required'),
     result: yup.string(),
   })
 
@@ -128,7 +128,7 @@ export const ProfitLoss = () => {
           </button>
         </header>
 
-        <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
+        <form onSubmit={handleSubmit(onSubmit)} autoComplete='off' className='space-y-4'>
           <Controller
             name='price1'
             control={control}

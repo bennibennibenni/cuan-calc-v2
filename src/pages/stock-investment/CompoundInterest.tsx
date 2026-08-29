@@ -46,10 +46,10 @@ const FieldIcon = ({ children }: { readonly children: React.ReactNode }) => (
 export const CompoundInterest = () => {
   const navigate = useNavigate()
   const schema = yup.object().shape({
-    principal: yup.string().required('Oh noes! field must be fill!'),
-    rate: yup.string().required('Oh noes! field must be fill!'),
-    times: yup.string().required('Oh noes! field must be fill!'),
-    years: yup.string().required('Oh noes! field must be fill!'),
+    principal: yup.string().required('This field is required'),
+    rate: yup.string().required('This field is required'),
+    times: yup.string().required('This field is required'),
+    years: yup.string().required('This field is required'),
     result: yup.string(),
   })
 
@@ -130,7 +130,7 @@ export const CompoundInterest = () => {
           </button>
         </header>
 
-        <form onSubmit={handleSubmit(calculate)} className='space-y-4'>
+        <form onSubmit={handleSubmit(calculate)} autoComplete='off' className='space-y-4'>
           <Controller
             name='principal'
             control={control}

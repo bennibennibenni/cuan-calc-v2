@@ -52,8 +52,8 @@ const FieldIcon = ({ children }: { readonly children: React.ReactNode }) => (
 export const CashbackReward = () => {
   const navigate = useNavigate()
   const schema = yup.object().shape({
-    cashbackPercentage: yup.string().required('Oh noes! field must be fill!'),
-    maximumCashback: yup.string().required('Oh noes! field must be fill!'),
+    cashbackPercentage: yup.string().required('This field is required'),
+    maximumCashback: yup.string().required('This field is required'),
     result: yup.string(),
   })
 
@@ -111,7 +111,7 @@ export const CashbackReward = () => {
           </button>
         </header>
 
-        <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
+        <form onSubmit={handleSubmit(onSubmit)} autoComplete='off' className='space-y-4'>
           <Controller
             name='cashbackPercentage'
             control={control}

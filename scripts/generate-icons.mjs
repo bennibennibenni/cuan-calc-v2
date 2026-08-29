@@ -306,7 +306,7 @@ writeFileSync('public/favicon.svg', standardSvg512)
 
 const manifestContent = JSON.stringify({
   name: 'Cuan Calculator — Track and Forecast Your Gains',
-  short_name: 'Cuan Calc',
+  short_name: 'Cuan Calculator',
   description: 'Track and forecast your gains with stock investment, money management, currency converter, and financial ratio tools.',
   icons: [
     { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
@@ -329,4 +329,4 @@ const manifestContent = JSON.stringify({
 writeFileSync('public/manifest.webmanifest', manifestContent)
 writeFileSync('public/icons/site.webmanifest', manifestContent)
 
-console.log('All icons generated successfully!')
+console.log('All icons generated successfully!')

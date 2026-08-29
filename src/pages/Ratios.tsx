@@ -162,7 +162,7 @@ export const Ratios = () => {
           </button>
         </header>
 
-        <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
+        <form onSubmit={handleSubmit(onSubmit)} autoComplete='off' className='space-y-4'>
           <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
             <Controller
               name='value1'
